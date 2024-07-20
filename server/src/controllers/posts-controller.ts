@@ -6,9 +6,13 @@ const model = PostModel
 
 // Get all posts
 export async function getAll(req: Request, res: Response) {
-    const posts = await model.find({})
-
-    res.status(200).json(posts)
+    try {
+        const posts = await model.find({})
+        
+        res.status(200).json(posts)
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
 }
 
 // Add a post

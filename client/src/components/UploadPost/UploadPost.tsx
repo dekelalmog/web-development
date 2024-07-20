@@ -29,7 +29,7 @@ const UploadPost: React.FC = () => {
 
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      const response = await axios.post(`${backendUrl}/posts/image`, formData, {
+      const response = await axios.post(`${backendUrl}/file`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
