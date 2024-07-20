@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import UploadPost from '../UploadPost/UploadPost';
 
 const Home: React.FC = () => {
     const [posts, setPosts] = useState([]);
@@ -20,6 +21,7 @@ const Home: React.FC = () => {
     return (
         <div>
             <h1>Home</h1>
+            <UploadPost></UploadPost>
             {posts.map((post: any) => (
                 <div key={post.owner}>
                     <h2>{post.description}</h2>

@@ -8,7 +8,7 @@ import App from './App.tsx'
 import './index.css'
 
 import Login from './components/Login/login.tsx';
-import UserPage from './components/User-Page/user-page.tsx';
+import UserPage from './components/User-Page/User-Page.tsx';
 import Register from './components/Register/Register.tsx';
 import Home from './components/Home/Home.tsx';
 
