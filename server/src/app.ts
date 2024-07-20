@@ -1,6 +1,8 @@
 import express, {Express} from 'express';
 import postsRouter from './routes/posts-router';
 import userRouter from './routes/user-router';
+import weatherRouter from './routes/weather-router'
+import fileRouter from './routes/file-router'
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import env from 'dotenv';
@@ -29,6 +31,8 @@ const initApp = (): Promise<Express> => {
             
             app.use('/posts', postsRouter);
             app.use('/users', userRouter);
+            app.use('/weather', weatherRouter)
+            app.use('/file', fileRouter)
             
             app.get('/', (req, res) => {
                 res.send('default route');
