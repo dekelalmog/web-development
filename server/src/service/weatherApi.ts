@@ -3,7 +3,8 @@ import { fetchWeatherApi } from 'openmeteo';
 const params = {
 	"latitude": 32.0809,
 	"longitude": 34.7806,
-	"hourly": "temperature_2m"
+	"hourly": "temperature_2m",
+    "forecast_days": 1
 };
 const url = "https://api.open-meteo.com/v1/forecast";
 
@@ -21,23 +22,13 @@ const getWeather = async () => {
     const hourly = response.hourly()!;
 
     const weatherData = {
-        hourly: {
-            time: range(Number(hourly.time()), Number(hourly.timeEnd()), hourly.interval()).map(
-                (t) => new Date((t + utcOffsetSeconds) * 1000)
-            ),
-            temperature: hourly.variables(0)!.valuesArray()!,
-        },
+        time: range(Number(hourly.time()), Number(hourly.timeEnd()), hourly.interval()).map(
+            (t) => new Date((t + utcOffsetSeconds) * 1000)
+        ),
+        temperature: hourly.variables(0)!.valuesArray()!,
     };
 
     return weatherData
-    
-    // `weatherData` now contains a simple structure with arrays for datetime and weather data
-    // for (let i = 0; i < weatherData.hourly.time.length; i++) {
-    //     console.log(
-    //         weatherData.hourly.time[i].toISOString(),
-    //         weatherData.hourly.temperature2m[i]
-    //     );
-    // }
 }
 
 const range = (start: number, stop: number, step: number) =>

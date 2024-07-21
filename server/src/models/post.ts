@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { Comment } from './comment';
 
-interface Post extends Document {
+export interface Post extends Document {
     _id?: string;
     description: string;
     imageUrl?: string;
