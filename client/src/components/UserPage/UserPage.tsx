@@ -1,19 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import UserService from "../../services/user-service";
+import { User } from "../../services/interfaces";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  // Add more properties as needed
-}
 
 const UserPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   const { getUserById } = useMemo(() => new UserService(), []);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User>();
 
   useEffect(() => {
     const fetchUser = async () => {

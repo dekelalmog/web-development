@@ -1,14 +1,6 @@
 import { CredentialResponse } from "@react-oauth/google";
 import ApiService from "./api-service";
-
-export interface IUser {
-  email: string;
-  password?: string;
-  imgUrl?: string;
-  _id?: string;
-  accessToken?: string;
-  refreshToken?: string;
-}
+import { User } from "./interfaces";
 
 class UserService {
   private apiService: ApiService;
@@ -18,11 +10,16 @@ class UserService {
     this.apiService = new ApiService(baseUrl);
   }
 
-  register(email: string, password: string, imgageUrl: string, name: string) {
+  register = (
+    email: string,
+    password: string,
+    imgageUrl: string,
+    name: string
+  ) => {
     console.log("register ...", email, password, imgageUrl, name);
 
-    return new Promise<IUser>((resolve, reject) => {
-      new ApiService("http://localhost:3000/users")
+    return new Promise<User>((resolve, reject) => {
+      this.apiService
         .post("register", { email, password, imgageUrl, name })
         .then((response: any) => {
           resolve(response.data);
@@ -31,12 +28,12 @@ class UserService {
           reject(error);
         });
     });
-  }
+  };
 
-  login(email: string, password: string) {
+  login = (email: string, password: string) => {
     console.log("login ...", email, password);
-    return new Promise<IUser>((resolve, reject) => {
-      new ApiService("http://localhost:3000/users")
+    return new Promise<User>((resolve, reject) => {
+      this.apiService
         .post("login", { email, password })
         .then((response: any) => {
           resolve(response.data);
@@ -45,9 +42,9 @@ class UserService {
           reject(error);
         });
     });
-  }
+  };
 
-  logout() {
+  logout = () => {
     console.log("logout ...");
 
     return new Promise<void>((resolve, reject) => {
@@ -60,12 +57,12 @@ class UserService {
           reject(error);
         });
     });
-  }
+  };
 
-  refreshToken() {
+  refreshToken = () => {
     console.log("refreshToken ...");
 
-    return new Promise<IUser>((resolve, reject) => {
+    return new Promise<User>((resolve, reject) => {
       this.apiService
         .post("refresh-token", {})
         .then((response: any) => {
@@ -75,12 +72,12 @@ class UserService {
           reject(error);
         });
     });
-  }
+  };
 
-  getUserById(userId: string) {
+  getUserById = (userId: string) => {
     console.log("getUserById ...", userId);
 
-    return new Promise<IUser>((resolve, reject) => {
+    return new Promise<User>((resolve, reject) => {
       this.apiService
         .get(userId)
         .then((response: any) => {
@@ -90,10 +87,10 @@ class UserService {
           reject(error);
         });
     });
-  }
+  };
 
   googleSignin = (credentialResponse: CredentialResponse) => {
-    return new Promise<IUser>((resolve, reject) => {
+    return new Promise<User>((resolve, reject) => {
       console.log("googleSignin ...");
       this.apiService
         .post("google-login", credentialResponse)
