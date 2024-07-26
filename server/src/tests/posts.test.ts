@@ -70,4 +70,26 @@ describe("Posts Tests" , () => {
     const post: Post = res.body;
     expect(post.description).toEqual(newDescription)
   })
+
+  test("Comment on a post", async () => {
+    const comment: Comment = {
+      owner: testPost.owner,
+      text: "I made a great post! Im so great!"
+    }
+
+    const res = await request(app).put(`/posts/comment/${testPost._id}`).send(comment)
+    const post: Post = res.body
+    expect(res.status).toBe(201)
+    expect(post.comments).toHaveLength(2)
+    expect(post.comments[1].owner).toBe(testPost.owner)
+    expect(post.comments[1].text).toBe("I made a great post! Im so great!")
+  })
+
+  test("Delete post", async () => {
+    const res = await request(app).delete(`/posts/${testPost._id}`)
+    expect(res.status).toBe(200)
+
+    const getRes = await request(app).get(`/posts`)
+    expect(getRes.body).toStrictEqual([])
+  })
 })

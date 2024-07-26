@@ -49,7 +49,6 @@ export async function deletePost(req: Request, res: Response) {
 }
 
 export async function addComment(req: Request, res: Response) {
-    console.log(req)
     const comment: Comment = {
         // owner: req.user.id,
         owner: req.body.owner,
@@ -57,7 +56,6 @@ export async function addComment(req: Request, res: Response) {
     }
 
     const postId = req.params.id
-    console.log(postId)
 
     try {
         const post = await model.findById(postId)
