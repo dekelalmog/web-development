@@ -15,6 +15,22 @@ export async function getAll(req: Request, res: Response) {
     }
 }
 
+// Get post by ID
+export async function getById(req: Request, res: Response) {
+    const postId = req.params.id
+    try {
+        const post = await model.findById(postId)
+        
+        if (!post) {
+            res.status(404).send("Post not found")
+        }
+
+        res.status(200).json(post)
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+}
+
 // Add a post
 export async function addPost(req: Request, res: Response) {
     const post = req.body;
