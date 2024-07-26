@@ -1,6 +1,6 @@
 // src/pages/Profile.tsx
 import React, { useState, useEffect } from 'react';
-import { getUserById } from '../../services/user-service';
+import { getUserById, updateUser } from '../../services/user-service';
 import { User } from '../../services/interfaces';
 import Toolbar from '../Toolbar/Toolbar';
 import './Profile.css';
@@ -49,7 +49,7 @@ const Profile: React.FC = () => {
         // Implement file upload logic here
         // For now, we'll just update the user with a new URL
         const imageUrl = URL.createObjectURL(file);
-        const updatedUser = await updateUser(user._id, { ...user, imageUrl });
+        const updatedUser = await updateUser(user._id, user.name, imageUrl);
         setUser(updatedUser);
       } catch (error) {
         console.error('Error updating profile picture:', error);
@@ -60,7 +60,7 @@ const Profile: React.FC = () => {
   const handleChangeUsername = async () => {
     if (user && newUsername) {
       try {
-        const updatedUser = await updateUser(user._id, { ...user, name: newUsername });
+        const updatedUser = await updateUser(user._id, newUsername, user.imageUrl );
         setUser(updatedUser);
         setIsEditing(false);
         setNewUsername('');
@@ -70,7 +70,7 @@ const Profile: React.FC = () => {
     }
   };
 
-  if (!user) {
+ if (!user) {
     return <div>Loading...</div>;
   }
 
@@ -81,6 +81,8 @@ const Profile: React.FC = () => {
         <h1>Hello, {user.name}!</h1>
         <div className="profile-picture">
           <img src={user.imageUrl || '/default-avatar.png'} alt={user.name} />
+        </div>
+        <div className="profile-actions">
           <input
             type="file"
             id="profile-picture-input"
@@ -91,27 +93,27 @@ const Profile: React.FC = () => {
           <label htmlFor="profile-picture-input" className="profile-button">
             Change Picture
           </label>
+          {isEditing ? (
+            <div className="edit-username">
+              <input
+                type="text"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                placeholder="New username"
+              />
+              <button onClick={handleChangeUsername} className="profile-button">
+                Save Username
+              </button>
+              <button onClick={() => setIsEditing(false)} className="profile-button">
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button onClick={() => setIsEditing(true)} className="profile-button">
+              Change Username
+            </button>
+          )}
         </div>
-        {isEditing ? (
-          <div>
-            <input
-              type="text"
-              value={newUsername}
-              onChange={(e) => setNewUsername(e.target.value)}
-              placeholder="New username"
-            />
-            <button onClick={handleChangeUsername} className="profile-button">
-              Save Username
-            </button>
-            <button onClick={() => setIsEditing(false)} className="profile-button">
-              Cancel
-            </button>
-          </div>
-        ) : (
-          <button onClick={() => setIsEditing(true)} className="profile-button">
-            Change Username
-          </button>
-        )}
       </div>
     </div>
   );
