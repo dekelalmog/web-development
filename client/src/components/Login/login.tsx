@@ -1,19 +1,25 @@
 import { useState, useMemo } from "react";
 import userSerivce from "../../services/user-service";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { Navigate } from "react-router-dom";
 
 const Login = () => {
   const { login, googleSignin } = useMemo(() => new userSerivce(), []);
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      return;
+    }
+
     try {
-      await login(username, password);
-      // Redirect or perform any other action upon successful login
+      await login(email, password);
+      return <Navigate to="/" />;
     } catch (error) {
-      setError("Invalid username or password");
+      setError("Invalid email or password");
     }
   };
 
@@ -31,23 +37,27 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h2>Login</h2>
-      {error && <p>{error}</p>}
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Login</button>
-      <GoogleLogin onSuccess={googleResponse} onError={googleError} />
+      {error && <p className="error">{error}</p>}
+      <div className="login-content">
+        <input
+          type="text"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <div className="actions">
+          <button onClick={handleLogin}>Login</button>
+          <GoogleLogin onSuccess={googleResponse} onError={googleError} />
+        </div>
+      </div>
     </div>
   );
 };

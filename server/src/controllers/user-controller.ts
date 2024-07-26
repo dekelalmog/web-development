@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import UserModel, { User } from "../models/user";
 import { OAuth2Client } from "google-auth-library";
 import { Document } from "mongoose";
@@ -104,18 +104,18 @@ export const logout = async (req: Request, res: Response) => {
         return res.status(401).send("User not found");
       }
 
-      if (!user.tokens.includes(refreshToken)) {
-        user.tokens = [];
-        await user.save();
+      if (!userDoc.tokens.includes(token)) {
+        userDoc.tokens = [];
+        await userDoc.save();
         return res.status(401).send("Invalid token");
       }
 
-      user.tokens = user.tokens.filter((t) => t !== token);
-      await user.save();
+      userDoc.tokens = userDoc.tokens.filter((t: string) => t !== token);
+      await userDoc.save();
       return res.status(200).send("User logged out successfully");
     });
   } catch (error) {
-    res.status(401).json({ error });
+    res.status(400).json({ error });
   }
 };
 
@@ -199,6 +199,23 @@ export const googleLogin = async (req: Request, res: Response) => {
   }
 };
 
+export type AuthRequest = Request & { user: { _id: string } };
+
+export const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  const token = extractToken(req);
+  if (token == null) {
+      return res.sendStatus(401);
+  }
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, data: jwt.JwtPayload) => {
+      if (err) {
+          return res.sendStatus(401);
+      }
+      const id = data._id;
+      req.user = { _id: id };
+      return next();
+  });
+}
+
 // Generate token function
 export const generateTokens = async (user: Document & User) => {
 
@@ -237,3 +254,5 @@ const extractToken = (req: Request): string => {
   const token = authHeader && authHeader.split(" ")[1];
   return token;
 };
+
+export default {getById, register, login, logout, refreshToken, googleLogin, authMiddleware};

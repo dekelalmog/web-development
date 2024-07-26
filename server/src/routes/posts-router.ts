@@ -2,6 +2,7 @@ import express from 'express';
 import multer from "multer"
 import path from 'path';
 import { getAll, addPost, updatePost, deletePost, addComment } from '../controllers/posts-controller';
+import { authMiddleware } from '../controllers/user-controller';
 
 const router = express.Router();
 
@@ -95,7 +96,7 @@ router.get('/', getAll);
  *       500:
  *         description: Internal server error
  */
-router.post('/', addPost);
+router.post('/', authMiddleware, addPost);
 
 /**
  * @swagger
@@ -126,7 +127,7 @@ router.post('/', addPost);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', updatePost);
+router.put('/:id', authMiddleware, updatePost);
 
 /**
  * @swagger
@@ -167,7 +168,7 @@ router.put('/:id', updatePost);
  *       500:
  *         description: Internal server error
  */
-router.put('/comment/:id', addComment);
+router.put('/comment/:id',authMiddleware, addComment);
 
 /**
  * @swagger
@@ -188,6 +189,6 @@ router.put('/comment/:id', addComment);
  *       500:
  *         description: Internal server error
  */
-router.delete('/:id', deletePost);
+router.delete('/:id', authMiddleware, deletePost);
 
 export default router;
