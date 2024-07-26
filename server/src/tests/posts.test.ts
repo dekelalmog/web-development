@@ -5,16 +5,32 @@ import mongoose from 'mongoose';
 import { Express } from 'express';
 import PostModel from '../models/post';
 import { Comment } from '../models/comment';
+import UserModel from '../models/user';
 
 let app: Express;
 
-// Cant use Post from file, uses Document
+// Cant use Post/User from file, uses Document
 type Post = {
   _id?: string;
   description: string;
   imageUrl?: string;
   owner: string;
   comments: Comment[];
+}
+
+type User = {
+  id?: number;
+  name: string;
+  email: string;
+  password: string;
+  accessToken?: string;
+  imageUrl?: string;
+}
+
+const testUser: User = {
+  name: "Tester",
+  email: "tester1234@gmail.com",
+  password: "Aa12345678"
 }
 
 const testPost: Post = {
@@ -28,9 +44,14 @@ const testPost: Post = {
   ]
 }
 
+let accessToken = ""
+
 beforeAll(async () => {
   app = await initApp();
   await PostModel.deleteMany();
+  await UserModel.deleteMany();
+  const response = await request(app).post("/users/register").send(testUser)
+  accessToken = response.body.tokens[1]
 })
 
 afterAll(async () => {
@@ -45,7 +66,7 @@ describe("Posts Tests" , () => {
   }),
 
   test("Post a new Post", async () => {
-    const res = await request(app).post('/posts').send(testPost)
+    const res = await request(app).post('/posts').send(testPost).set("Authorization", `Bearer ${accessToken}`)
     const comment: Comment = {
       owner: res.body.comments[0].owner,
       text: res.body.comments[0].text
@@ -66,7 +87,7 @@ describe("Posts Tests" , () => {
       comments: testPost.comments
     }
     
-    const res = await request(app).put(`/posts/${testPost._id}`).send(newPost)
+    const res = await request(app).put(`/posts/${testPost._id}`).send(newPost).set("Authorization", `Bearer ${accessToken}`)
     const post: Post = res.body;
     expect(post.description).toEqual(newDescription)
   })
@@ -77,7 +98,7 @@ describe("Posts Tests" , () => {
       text: "I made a great post! Im so great!"
     }
 
-    const res = await request(app).put(`/posts/comment/${testPost._id}`).send(comment)
+    const res = await request(app).put(`/posts/comment/${testPost._id}`).send(comment).set("Authorization", `Bearer ${accessToken}`)
     const post: Post = res.body
     expect(res.status).toBe(201)
     expect(post.comments).toHaveLength(2)
@@ -86,7 +107,7 @@ describe("Posts Tests" , () => {
   })
 
   test("Delete post", async () => {
-    const res = await request(app).delete(`/posts/${testPost._id}`)
+    const res = await request(app).delete(`/posts/${testPost._id}`).set("Authorization", `Bearer ${accessToken}`)
     expect(res.status).toBe(200)
 
     const getRes = await request(app).get(`/posts`)

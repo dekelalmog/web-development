@@ -183,6 +183,58 @@ router.post('/refresh-token', refreshToken);
  *         description: Internal server error
  */
 router.post('/logout', logout);
+
+/**
+ * @swagger
+ * /google-login:
+ *   post:
+ *     summary: User login via Google
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               credential:
+ *                 type: string
+ *                 description: Google ID token credential
+ *             example:
+ *               credential: 'your-google-id-token'
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 email:
+ *                   type: string
+ *                 _id:
+ *                   type: string
+ *                 imageUrl:
+ *                   type: string
+ *                 tokens:
+ *                   type: object
+ *                   properties:
+ *                     accessToken:
+ *                       type: string
+ *                     refreshToken:
+ *                       type: string
+ *               example:
+ *                 email: 'user@example.com'
+ *                 _id: '60d0fe4f5311236168a109ca'
+ *                 imageUrl: 'http://example.com/image.jpg'
+ *                 tokens:
+ *                   accessToken: 'your-access-token'
+ *                   refreshToken: 'your-refresh-token'
+ *       400:
+ *         description: Invalid Google ID token or other error
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/google-login', googleLogin);
 
 export default router;

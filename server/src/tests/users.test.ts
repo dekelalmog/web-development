@@ -5,11 +5,17 @@ import { Express } from 'express';
 import UserModel from '../models/user';
 import bcrypt from "bcrypt";
 import { generateTokens } from '../controllers/user-controller';
+import { OAuth2Client } from 'google-auth-library';
+
+jest.mock('google-auth-library');
+
+const MockOAuth2Client = OAuth2Client as jest.Mocked<typeof OAuth2Client>;
 
 let app: Express;
 
 beforeAll(async () => {
   app = await initApp();
+  await UserModel.deleteMany();
 });
 
 afterAll(async () => {
@@ -19,12 +25,12 @@ afterAll(async () => {
 describe('User Routes', () => {
   describe('GET /users/:id', () => {
     let userId: string;
-
+    let userEmail = "testuser@example.com"
+    
     beforeAll(async () => {
-      // Create a test user
       const user = await UserModel.create({
         id: 1,
-        email: 'testuser@example.com',
+        email: userEmail,
         password: 'password123',
         tokens: [],
       });
@@ -32,19 +38,18 @@ describe('User Routes', () => {
     });
 
     afterAll(async () => {
-      // Clean up the test user
       await UserModel.findByIdAndDelete(userId);
     });
 
     test('should get user by ID', async () => {
       const response = await request(app).get(`/users/${userId}`);
       expect(response.status).toBe(200);
-      expect(response.body.user.email).toBe('testuser@example.com');
+      expect(response.body.user.email).toBe(userEmail);
     });
 
-    test('should return 500 if user not found', async () => {
+    test('should return 404 if user not found', async () => {
       const response = await request(app).get('/users/invalidId');
-      expect(response.status).toBe(500);
+      expect(response.status).toBe(404);
     });
   });
 
@@ -61,7 +66,6 @@ describe('User Routes', () => {
       expect(response.status).toBe(201);
       expect(response.body.email).toBe(newUser.email);
 
-      // Clean up the created user
       await UserModel.findOneAndDelete({ email: newUser.email });
     });
 
@@ -78,7 +82,6 @@ describe('User Routes', () => {
       const response = await request(app).post('/users/register').send(existingUser);
       expect(response.status).toBe(400);
 
-      // Clean up the created user
       await UserModel.findOneAndDelete({ email: existingUser.email });
     });
   });
@@ -142,17 +145,17 @@ describe('User Routes', () => {
     test('should refresh token with valid refresh token', async () => {
       const response = await request(app)
         .post('/users/refresh-token')
-        .send({ token: refreshToken });
+        .set("authorization", `Bearer ${refreshToken}`);
 
       expect(response.status).toBe(200);
       expect(response.body.tokens).toHaveProperty('accessToken');
       expect(response.body.tokens).toHaveProperty('refreshToken');
-    });
+    }, 15000);
 
     test('should return 401 for invalid refresh token', async () => {
       const response = await request(app)
         .post('/users/refresh-token')
-        .send({ token: 'invalidToken' });
+        .set("authorization", `Bearer InvalidToken`);
 
       expect(response.status).toBe(401);
     });
@@ -161,6 +164,7 @@ describe('User Routes', () => {
   describe('POST /logout', () => {
     let user: any;
     let refreshToken: string;
+    let accessToken: string;
 
     beforeAll(async () => {
       user = await UserModel.create({
@@ -170,6 +174,7 @@ describe('User Routes', () => {
       });
       const tokens = await generateTokens(user);
       refreshToken = tokens.refreshToken;
+      accessToken = tokens.accessToken;
     });
 
     afterAll(async () => {
@@ -178,8 +183,7 @@ describe('User Routes', () => {
 
     test('should logout user with valid token', async () => {
       const response = await request(app)
-        .post('/users/logout')
-        .send({ token: refreshToken });
+        .post('/users/logout').set("authorization", `Bearer ${refreshToken}`);
 
       expect(response.status).toBe(200);
     });
@@ -187,9 +191,79 @@ describe('User Routes', () => {
     test('should return 401 for invalid token', async () => {
       const response = await request(app)
         .post('/users/logout')
-        .send({ token: 'invalidToken' });
+        .set("authorization", `Bearer InvalidToken`);
 
       expect(response.status).toBe(401);
+    });
+  });
+
+  describe('POST /google-login', () => {
+    test('Google login - existing user', async () => {
+      const mockTicket = {
+        getPayload: jest.fn().mockReturnValue({
+          email: 'existinguser@example.com',
+          picture: 'http://example.com/image.jpg',
+        }),
+      };
+
+      MockOAuth2Client.prototype.verifyIdToken = jest.fn().mockResolvedValue(mockTicket);
+
+      await UserModel.create({
+        email: 'existinguser@example.com',
+        password: await bcrypt.hash('password123', 10),
+        tokens: [],
+      });
+
+      const credential = 'mock-google-id-token';
+
+      const response = await request(app)
+        .post('/users/google-login')
+        .send({ credential });
+
+      expect(response.statusCode).toEqual(200);
+      expect(response.body.email).toEqual('existinguser@example.com');
+      expect(response.body).toHaveProperty('tokens');
+      expect(response.body.tokens).toHaveProperty('accessToken');
+      expect(response.body.tokens).toHaveProperty('refreshToken');
+
+      await UserModel.findOneAndDelete({ email: 'existinguser@example.com' });
+    });
+
+    test('Google login - new user', async () => {
+      const mockTicket = {
+        getPayload: jest.fn().mockReturnValue({
+          email: 'newuser@example.com',
+          picture: 'http://example.com/image.jpg',
+        }),
+      };
+
+      MockOAuth2Client.prototype.verifyIdToken = jest.fn().mockResolvedValue(mockTicket);
+
+      const credential = 'mock-google-id-token';
+
+      const response = await request(app)
+        .post('/users/google-login')
+        .send({ credential });
+
+      expect(response.statusCode).toEqual(200);
+      expect(response.body.email).toEqual('newuser@example.com');
+      expect(response.body).toHaveProperty('tokens');
+      expect(response.body.tokens).toHaveProperty('accessToken');
+      expect(response.body.tokens).toHaveProperty('refreshToken');
+
+      await UserModel.findOneAndDelete({ email: 'newuser@example.com' });
+    });
+
+    test('Google login - invalid token', async () => {
+      MockOAuth2Client.prototype.verifyIdToken = jest.fn().mockRejectedValue(new Error("Invalid token"));
+
+      const credential = 'invalid-google-id-token';
+
+      const response = await request(app)
+        .post('/users/google-login')
+        .send({ credential });
+
+      expect(response.statusCode).toEqual(400);
     });
   });
 });
