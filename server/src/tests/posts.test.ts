@@ -77,6 +77,13 @@ describe("Posts Tests" , () => {
     testPost._id = res.body._id
   }),
 
+  test("Get post by ID" , async () => {
+    const res = await request(app).get(`/posts/${testPost._id}`)
+    console.log(res.body)
+    expect(res.body).toHaveProperty('_id')
+    expect(res.status).toEqual(200)
+  }),
+
   test("Update a post", async () => {
     const newDescription = "Wow a new description"
 

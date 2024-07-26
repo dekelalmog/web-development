@@ -1,6 +1,7 @@
 import { fetchWeatherApi } from 'openmeteo';
 	
 const params = {
+    // long and lat of Tel Aviv
 	"latitude": 32.0809,
 	"longitude": 34.7806,
 	"hourly": "temperature_2m",

@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from "multer"
 import path from 'path';
-import { getAll, addPost, updatePost, deletePost, addComment } from '../controllers/posts-controller';
+import { getAll, addPost, updatePost, deletePost, addComment, getById } from '../controllers/posts-controller';
 import { authMiddleware } from '../controllers/user-controller';
 
 const router = express.Router();
@@ -56,13 +56,13 @@ const base = "http://127.0.0.1:3000/"
 
 /**
 * @swagger
-* /post/:
+* /posts/:
 *   get:
 *     summary: Get all posts
 *     tags: [Post]
 *     responses:
 *       200:
-*         description: File uploaded
+*         description: Posts
 *         content:
 *           application/json:
 *             schema: 
@@ -75,8 +75,35 @@ const base = "http://127.0.0.1:3000/"
 router.get('/', getAll);
 
 /**
+* @swagger
+* /posts/:
+*   get:
+*     summary: Get post by Id
+*     tags: [Post]
+*     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: string
+*         required: true
+*         description: The post ID
+*     responses:
+*       200:
+*         description: Post
+*         content:
+*           application/json:
+*             schema: 
+*               $ref: '#/components/schemas/Post'
+*       404:
+*         description: Post not found
+*       500:
+*         description: Internal server error
+*/
+router.get('/:id', getById)
+
+/**
  * @swagger
- * /post/:
+ * /posts/:
  *   post:
  *     summary: Create a new post
  *     tags: [Post]
@@ -100,7 +127,7 @@ router.post('/', authMiddleware, addPost);
 
 /**
  * @swagger
- * /post/{id}:
+ * /posts/{id}:
  *   put:
  *     summary: Update a post
  *     tags: [Post]
