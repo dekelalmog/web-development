@@ -200,7 +200,8 @@ export const googleLogin = async (req: Request, res: Response) => {
 };
 
 // Generate token function
-const generateTokens = async (user: Document & User) => {
+export const generateTokens = async (user: Document & User) => {
+
   const accessToken = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
     expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
   });
