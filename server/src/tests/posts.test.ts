@@ -14,7 +14,9 @@ type Post = {
   _id?: string;
   description: string;
   imageUrl?: string;
-  owner: string;
+  ownerName?: string;
+  ownerId: string;
+  ownerImageUrl?: string;
   comments: Comment[];
 }
 
@@ -35,7 +37,7 @@ const testUser: User = {
 
 const testPost: Post = {
   description: "TestDescription",
-  owner: "Ben",
+  ownerId: "",
   comments: [
     {
       owner: "Dekel",
@@ -51,6 +53,7 @@ beforeAll(async () => {
   await PostModel.deleteMany();
   await UserModel.deleteMany();
   const response = await request(app).post("/users/register").send(testUser)
+  testPost.ownerId = response.body._id
   accessToken = response.body.tokens[1]
 })
 
@@ -71,7 +74,7 @@ describe("Posts Tests" , () => {
       owner: res.body.comments[0].owner,
       text: res.body.comments[0].text
     }
-    const post: Post = {comments: [comment], description: res.body.description, owner: res.body.owner}
+    const post: Post = {comments: [comment], description: res.body.description, ownerId: res.body.ownerId}
     expect(post).toStrictEqual(testPost)
     expect(res.status).toEqual(201)
     testPost._id = res.body._id
@@ -79,7 +82,6 @@ describe("Posts Tests" , () => {
 
   test("Get post by ID" , async () => {
     const res = await request(app).get(`/posts/${testPost._id}`)
-    console.log(res.body)
     expect(res.body).toHaveProperty('_id')
     expect(res.status).toEqual(200)
   }),
@@ -89,7 +91,7 @@ describe("Posts Tests" , () => {
 
     const newPost: Post = {
       _id: testPost._id,
-      owner: testPost.owner,
+      ownerId: testPost.ownerId,
       description: "Wow a new description",
       comments: testPost.comments
     }
@@ -101,7 +103,7 @@ describe("Posts Tests" , () => {
 
   test("Comment on a post", async () => {
     const comment: Comment = {
-      owner: testPost.owner,
+      owner: testPost.ownerId,
       text: "I made a great post! Im so great!"
     }
 
@@ -109,7 +111,7 @@ describe("Posts Tests" , () => {
     const post: Post = res.body
     expect(res.status).toBe(201)
     expect(post.comments).toHaveLength(2)
-    expect(post.comments[1].owner).toBe(testPost.owner)
+    expect(post.comments[1].owner).toBe(testPost.ownerId)
     expect(post.comments[1].text).toBe("I made a great post! Im so great!")
   })
 

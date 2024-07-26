@@ -255,4 +255,13 @@ const extractToken = (req: Request): string => {
   return token;
 };
 
-export default {getById, register, login, logout, refreshToken, googleLogin, authMiddleware};
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const user = await UserModel.findByIdAndUpdate(req.body._id, {imageUrl: req.body.imageUrl, name: req.body.name}, {new: true})
+    res.status(200).json({ user });
+  } catch (err) {
+    res.status(500).send("Internal Error");
+  }
+}
+
+export default {getById, register, login, logout, refreshToken, googleLogin, authMiddleware, updateUser};

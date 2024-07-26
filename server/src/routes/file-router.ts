@@ -45,7 +45,6 @@ const upload = multer({ storage });
 *         description: 'Internal server error'
 */
 router.post('', upload.single("file"), function (req, res) {
-    console.log("router.post(/file: " + base + req.file.path)
     res.status(200).send({ url: "/" + req.file.path })
 });
 

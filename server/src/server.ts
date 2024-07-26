@@ -13,7 +13,7 @@ init().then((app) => {
                 version: "1.0.0",
                 description: "Travelerapp API Routes",
             },
-            servers: [{url: "http://localhost:3000/api",}],
+            servers: [{url: "http://localhost:3000/",}],
         },
         apis: ["./src/routes/*.ts"],
     };

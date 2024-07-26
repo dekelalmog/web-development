@@ -51,6 +51,10 @@ export const logout = () => {
   });
 };
 
+export const updateUser = () => {
+  
+}
+
 export const refreshToken = () => {
   console.log("users/refreshToken ...");
 
