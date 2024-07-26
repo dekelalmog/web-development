@@ -15,17 +15,16 @@ const router = express.Router();
  * components:
  *  schemas:
  *   Weather:
- *    type: object
- *    properties:
- *      time:
- *        type: string
- *        description: Hour of the day
- *      temperature:
- *        type: number
- *        description: Temperature at the given hour
- *    example:
- *      time: '14:00'
- *      temperature: 24.5
+ *    type: array
+ *    items:
+ *      type: object
+ *      properties:
+ *          time:
+ *              type: string
+ *              description: Hour of the day
+ *          temperature:
+ *              type: number
+ *              description: Temperature at the given hour
  */
 
 /**

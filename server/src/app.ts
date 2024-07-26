@@ -6,17 +6,15 @@ import cors from 'cors';
 import env from 'dotenv';
 import mongoose from 'mongoose';
 
-if (process.env.NODE_ENV === "test") {
-    env.config({ path: ".env.test" });
-} else if (process.env.NODE_ENV === "prod") {
+if (process.env.NODE_ENV === "prod") {
     env.config({ path: ".env.prod" });
+} else if (process.env.NODE_ENV === "test") {
+    env.config({ path: ".env.test" });
 } else {
     env.config();
 }
   
-env.config();
 const app = express();
-const port = process.env.PORT || 3000;
 
 import postsRouter from './routes/posts-router';
 import userRouter from './routes/user-router';
