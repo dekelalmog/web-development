@@ -1,107 +1,105 @@
 import { CredentialResponse } from "@react-oauth/google";
-import ApiService from "./api-service";
+import apiClient from "./api-service";
 import { User } from "./interfaces";
 
-class UserService {
-  private apiService: ApiService;
+export const register = (
+  email: string,
+  password: string,
+  imgageUrl: string,
+  name: string
+) => {
+  console.log("register ...", email, password, imgageUrl, name);
 
-  constructor() {
-    const baseUrl = "http://localhost:3000/users";
-    this.apiService = new ApiService(baseUrl);
-  }
+  return new Promise<User>((resolve, reject) => {
+    apiClient
+      .post("register", { email, password, imgageUrl, name })
+      .then((response: any) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
 
-  register = (
-    email: string,
-    password: string,
-    imgageUrl: string,
-    name: string
-  ) => {
-    console.log("register ...", email, password, imgageUrl, name);
+export const login = (email: string, password: string) => {
+  console.log("login ...", email, password);
+  return new Promise<User>((resolve, reject) => {
+    apiClient
+      .post("login", { email, password })
+      .then((response: any) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
 
-    return new Promise<User>((resolve, reject) => {
-      this.apiService
-        .post("register", { email, password, imgageUrl, name })
-        .then((response: any) => {
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  };
+export const logout = () => {
+  console.log("logout ...");
 
-  login = (email: string, password: string) => {
-    console.log("login ...", email, password);
-    return new Promise<User>((resolve, reject) => {
-      this.apiService
-        .post("login", { email, password })
-        .then((response: any) => {
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  };
+  return new Promise<void>((resolve, reject) => {
+    apiClient
+      .post("logout", {})
+      .then((response: any) => {
+        resolve();
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
 
-  logout = () => {
-    console.log("logout ...");
+export const refreshToken = () => {
+  console.log("refreshToken ...");
 
-    return new Promise<void>((resolve, reject) => {
-      this.apiService
-        .post("logout", {})
-        .then((response: any) => {
-          resolve();
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  };
+  return new Promise<User>((resolve, reject) => {
+    apiClient
+      .post("refresh-token", {})
+      .then((response: any) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
 
-  refreshToken = () => {
-    console.log("refreshToken ...");
+export const getUserById = (userId: string) => {
+  console.log("getUserById ...", userId);
 
-    return new Promise<User>((resolve, reject) => {
-      this.apiService
-        .post("refresh-token", {})
-        .then((response: any) => {
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  };
+  return new Promise<User>((resolve, reject) => {
+    apiClient
+      .get(userId)
+      .then((response: any) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
 
-  getUserById = (userId: string) => {
-    console.log("getUserById ...", userId);
+export const googleSignin = (credentialResponse: CredentialResponse) => {
+  return new Promise<User>((resolve, reject) => {
+    console.log("googleSignin ...");
+    apiClient
+      .post("google-login", credentialResponse)
+      .then((response: any) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
 
-    return new Promise<User>((resolve, reject) => {
-      this.apiService
-        .get(userId)
-        .then((response: any) => {
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  };
-
-  googleSignin = (credentialResponse: CredentialResponse) => {
-    return new Promise<User>((resolve, reject) => {
-      console.log("googleSignin ...");
-      this.apiService
-        .post("google-login", credentialResponse)
-        .then((response: any) => {
-          resolve(response.data);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  };
-}
-
-export default UserService;
+export default {
+  register,
+  login,
+  logout,
+  refreshToken,
+  getUserById,
+  googleSignin,
+};

@@ -180,7 +180,7 @@ export const googleLogin = async (req: Request, res: Response) => {
       user = await UserModel.create({
         email: email,
         imgageUrl: payload?.picture,
-        name: email,
+        name: payload?.name,
         password: "",
       });
     }

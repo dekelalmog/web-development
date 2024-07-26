@@ -1,10 +1,9 @@
-import { useState, useMemo } from "react";
-import userSerivce from "../../services/user-service";
+import { useState } from "react";
+import { googleSignin, login } from "../../services/user-service";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { Navigate } from "react-router-dom";
 
 const Login = () => {
-  const { login, googleSignin } = useMemo(() => new userSerivce(), []);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

@@ -1,47 +1,34 @@
 import axios from 'axios';
+// import { SERVER_URL } from './consts';
 
-class ApiService {
-    private baseUrl: string;
+const SERVER_URL = 'http://localhost:300';
 
-    constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
+const apiClient = axios.create({
+    baseURL: SERVER_URL,
+});
+
+apiClient.interceptors.request.use((config) => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
     }
+    return config;
+});
 
-    async get<T>(endpoint: string): Promise<T> {
-        try {
-            const response = await axios.get<T>(`${this.baseUrl}/${endpoint}`);
-            return response.data;
-        } catch (error: any) {
-            throw new Error(`Failed to fetch data from ${endpoint}: ${error.message}`);
-        }
+export const refreshToken = async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) {
+        throw new Error('No refresh token found');
     }
+    const unintercepted = axios.create();
+    const { data } = await unintercepted.get(`${SERVER_URL}/users/refresh-token`, {
+        headers: {
+            Authorization: `Bearer ${refreshToken}`,
+        },
+    });
 
-    async post<T>(endpoint: string, data: any): Promise<T> {
-        try {
-            const response = await axios.post<T>(`${this.baseUrl}/${endpoint}`, data);
-            return response.data;
-        } catch (error: any) {
-            throw new Error(`Failed to post data to ${endpoint}: ${error.message}`);
-        }
-    }
+    localStorage.setItem('accessToken', data.accessToken);
+    localStorage.setItem('refreshToken', data.refreshToken);
+};
 
-    async put<T>(endpoint: string, data: any): Promise<T> {
-        try {
-            const response = await axios.put<T>(`${this.baseUrl}/${endpoint}`, data);
-            return response.data;
-        } catch (error: any) {
-            throw new Error(`Failed to put data to ${endpoint}: ${error.message}`);
-        }
-    }
-
-    async delete<T>(endpoint: string): Promise<T> {
-        try {
-            const response = await axios.delete<T>(`${this.baseUrl}/${endpoint}`);
-            return response.data;
-        } catch (error: any) {
-            throw new Error(`Failed to delete data from ${endpoint}: ${error.message}`);
-        }
-    }
-}
-
-export default ApiService;
+export default apiClient;

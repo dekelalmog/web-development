@@ -1,9 +1,8 @@
-import { useState, useMemo, FC, FormEvent } from 'react';
-import UserService from '../../services/user-service';
+import { useState, FC, FormEvent } from 'react';
+import { googleSignin, register } from '../../services/user-service';
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 
 const Register: FC = () => {
-    const { register, googleSignin } = useMemo(() => new UserService(), []);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
