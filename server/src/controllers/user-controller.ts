@@ -14,7 +14,7 @@ export const getById = async (req: Request, res: Response) => {
     const user = await UserModel.findById(userId);
     res.status(200).json({ user });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.status(404).json({ error: "Not Found" });
   }
 };
 
@@ -47,7 +47,7 @@ export const register = async (req: Request, res: Response) => {
 
     const tokens = await generateTokens(newUser);
 
-    newUser.tokens.push(tokens.refreshToken);
+    newUser.tokens.push(tokens.accessToken);
 
     return res.status(201).send(newUser);
 
@@ -90,7 +90,7 @@ export const logout = async (req: Request, res: Response) => {
   const token = extractToken(req);
 
   if (!token) {
-    return res.status(401).send("Invalid token");
+    return res.status(401).send("Error extracting token");
   }
 
   try {
@@ -107,7 +107,7 @@ export const logout = async (req: Request, res: Response) => {
       if (!userDoc.tokens.includes(token)) {
         userDoc.tokens = [];
         await userDoc.save();
-        return res.status(401).send("Invalid token");
+        return res.status(401).send("Invalid user token");
       }
 
       userDoc.tokens = userDoc.tokens.filter((t: string) => t !== token);
@@ -141,16 +141,16 @@ export const refreshToken = async (req: Request, res: Response) => {
           return res.status(401).send("User not found");
         }
 
-        if (!user.tokens.includes(refreshToken)) {
-          user.tokens = [];
-          await user.save();
+        if (!userDoc.tokens?.includes(refreshToken)) {
+          userDoc.tokens = [];
+          await userDoc.save();
           return res.status(401).send("Invalid token");
         }
 
-        user.tokens = user.tokens.filter((t) => t !== refreshToken);
-        const tokens = await generateTokens(user);
-        user.tokens.push(tokens.refreshToken);
-        await user.save();
+        userDoc.tokens = userDoc.tokens.filter((t) => t !== refreshToken);
+        const tokens = await generateTokens(userDoc);
+        userDoc.tokens.push(tokens.refreshToken);
+        await userDoc.save();
 
         return res.status(200).json({ tokens });
       }
@@ -217,7 +217,8 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
 }
 
 // Generate token function
-const generateTokens = async (user: Document & User) => {
+export const generateTokens = async (user: Document & User) => {
+
   const accessToken = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
     expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
   });

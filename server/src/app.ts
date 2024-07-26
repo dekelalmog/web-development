@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === "test") {
     env.config({ path: ".env.test" });
 } else if (process.env.NODE_ENV === "prod") {
     env.config({ path: ".env.prod" });
-} else if (process.env.NODE_ENV === "test") {
+} else if (process.env.NODE_ENV.includes("test")) {
     env.config({ path: ".env.test" });
 } else {
     env.config();

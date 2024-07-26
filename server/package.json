@@ -7,7 +7,7 @@
     "start": "tsc && node ./dist/server.js",
     "dev": "set NODE_ENV=dev && nodemon src/server.ts",
     "lint": "eslint . --ext .ts",
-    "test": "set NODE_ENV=test && tsc && jest --no-cache --detectOpenHandles --forceExit"
+    "test": "set NODE_ENV=test&& tsc && jest --no-cache --detectOpenHandles --forceExit"
   },
   "keywords": [],
   "author": "",
