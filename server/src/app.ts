@@ -1,6 +1,4 @@
 import express, {Express} from 'express';
-import postsRouter from './routes/posts-router';
-import userRouter from './routes/user-router';
 import weatherRouter from './routes/weather-router'
 import fileRouter from './routes/file-router'
 import bodyParser from 'body-parser';
@@ -17,6 +15,9 @@ if (process.env.NODE_ENV === "prod") {
 }
   
 const app = express();
+
+import postsRouter from './routes/posts-router';
+import userRouter from './routes/user-router';
 
 const initApp = (): Promise<Express> => {
     const promise = new Promise<Express>((resolve) => {

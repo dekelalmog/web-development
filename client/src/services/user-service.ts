@@ -1,43 +1,110 @@
-import ApiService from './api-service';
+import { CredentialResponse } from "@react-oauth/google";
+import ApiService from "./api-service";
+
+export interface IUser {
+  email: string;
+  password?: string;
+  imgUrl?: string;
+  _id?: string;
+  accessToken?: string;
+  refreshToken?: string;
+}
 
 class UserService {
-    private apiService: ApiService;
+  private apiService: ApiService;
 
-    constructor() {
-        const baseUrl = '/users';
-        this.apiService = new ApiService(baseUrl);
-    }
+  constructor() {
+    const baseUrl = "http://localhost:3000/users";
+    this.apiService = new ApiService(baseUrl);
+  }
 
-    register(username: string, password: string) {
-        // Implement the registration logic here
-        // Use this.apiService to make API requests
-        // Return a Promise that resolves when the registration is successful
+  register(email: string, password: string, imgageUrl: string, name: string) {
+    console.log("register ...", email, password, imgageUrl, name);
 
-    }
+    return new Promise<IUser>((resolve, reject) => {
+      new ApiService("http://localhost:3000/users")
+        .post("register", { email, password, imgageUrl, name })
+        .then((response: any) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
 
-    login(username: string, password: string) {
-        // Implement the login logic here
-        // Use this.apiService to make API requests
-        // Return a Promise that resolves when the login is successful
-    }
+  login(email: string, password: string) {
+    console.log("login ...", email, password);
+    return new Promise<IUser>((resolve, reject) => {
+      new ApiService("http://localhost:3000/users")
+        .post("login", { email, password })
+        .then((response: any) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
 
-    logout() {
-        // Implement the logout logic here
-        // Use this.apiService to make API requests
-        // Return a Promise that resolves when the logout is successful
-    }
+  logout() {
+    console.log("logout ...");
 
-    refreshToken() {
-        // Implement the refresh token logic here
-        // Use this.apiService to make API requests
-        // Return a Promise that resolves when the token is refreshed
-    }
+    return new Promise<void>((resolve, reject) => {
+      this.apiService
+        .post("logout", {})
+        .then((response: any) => {
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
 
-    getUserById(userId: string) {
-        // Implement the logic to get a user by ID here
-        // Use this.apiService to make API requests
-        // Return a Promise that resolves with the user data
-    }
+  refreshToken() {
+    console.log("refreshToken ...");
+
+    return new Promise<IUser>((resolve, reject) => {
+      this.apiService
+        .post("refresh-token", {})
+        .then((response: any) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  getUserById(userId: string) {
+    console.log("getUserById ...", userId);
+
+    return new Promise<IUser>((resolve, reject) => {
+      this.apiService
+        .get(userId)
+        .then((response: any) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  googleSignin = (credentialResponse: CredentialResponse) => {
+    return new Promise<IUser>((resolve, reject) => {
+      console.log("googleSignin ...");
+      this.apiService
+        .post("google-login", credentialResponse)
+        .then((response: any) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  };
 }
 
 export default UserService;
