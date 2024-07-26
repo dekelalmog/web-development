@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import UploadPost from '../UploadPost/UploadPost';
+import { getAllPosts } from '../../services/posts-service';
+import { Post } from '../../services/interfaces';
 
 const Home: React.FC = () => {
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState<Post[]>();
 
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch('https://api.example.com/posts');
-                const data = await response.json();
+                const data = await getAllPosts();
                 setPosts(data);
             } catch (error) {
                 console.error('Error fetching posts:', error);
@@ -22,7 +23,7 @@ const Home: React.FC = () => {
         <div>
             <h1>Home</h1>
             <UploadPost></UploadPost>
-            {posts.map((post: any) => (
+            {posts?.length && posts.map((post: any) => (
                 <div key={post.owner}>
                     <h2>{post.description}</h2>
                     <p>{post.body}</p>
