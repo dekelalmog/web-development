@@ -1,29 +1,24 @@
-import ApiService from './api-service';
-import { Post } from './interfaces';
+import apiClient from "./api-service";
+import { Post } from "./interfaces";
 
-class PostsService {
-    private apiService: ApiService;
+export const getAllPosts = (): Promise<Post[]> => {
+  return apiClient.get("/");
+};
 
-    constructor() {
-        const baseUrl = '/posts';
-        this.apiService = new ApiService(baseUrl);
-    }
+export const getPostById = (postId: string): Promise<Post> => {
+  return apiClient.get(`/${postId}`);
+};
 
-    getAllPosts(): Promise<Post[]> {
-        return this.apiService.get('/');
-    }
+export const createPost = (postData: Post) => {
+  return apiClient.post("/", postData);
+};
 
-    createPost(postData: Post) {
-        return this.apiService.post('/', postData);
-    }
+export const updatePost = (postId: string, postData: Post) => {
+  return apiClient.put(`/${postId}`, postData);
+};
 
-    updatePost(postId: string, postData: Post) {
-        return this.apiService.put(`/${postId}`, postData);
-    }
+export const deletePost = (postId: string) => {
+  return apiClient.delete(`/${postId}`);
+};
 
-    deletePost(postId: string) {
-        return this.apiService.delete(`/${postId}`);
-    }
-}
-
-export default PostsService;
+export default { getAllPosts, createPost, updatePost, deletePost, getPostById };
