@@ -1,12 +1,17 @@
 import express, {Express} from 'express';
-import weatherRouter from './routes/weather-router'
-import fileRouter from './routes/file-router'
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import env from 'dotenv';
 import mongoose from 'mongoose';
 
-if (process.env.NODE_ENV === "prod") {
+import weatherRouter from './routes/weather-router'
+import fileRouter from './routes/file-router'
+import postsRouter from './routes/posts-router';
+import userRouter from './routes/user-router';
+
+if (process.env.NODE_ENV === "test") {
+    env.config({ path: ".env.test" });
+} else if (process.env.NODE_ENV === "prod") {
     env.config({ path: ".env.prod" });
 } else if (process.env.NODE_ENV === "test") {
     env.config({ path: ".env.test" });
@@ -15,9 +20,6 @@ if (process.env.NODE_ENV === "prod") {
 }
   
 const app = express();
-
-import postsRouter from './routes/posts-router';
-import userRouter from './routes/user-router';
 
 const initApp = (): Promise<Express> => {
     const promise = new Promise<Express>((resolve) => {

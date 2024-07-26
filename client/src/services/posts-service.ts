@@ -1,27 +1,28 @@
 import ApiService from './api-service';
+import { Post } from './interfaces';
 
 class PostsService {
     private apiService: ApiService;
 
     constructor() {
-        const baseUrl = '/';
+        const baseUrl = '/posts';
         this.apiService = new ApiService(baseUrl);
     }
 
-    getAllPosts() {
-        return this.apiService.get('/posts');
+    getAllPosts(): Promise<Post[]> {
+        return this.apiService.get('/');
     }
 
-    createPost(postData: any) {
-        return this.apiService.post('/posts', postData);
+    createPost(postData: Post) {
+        return this.apiService.post('/', postData);
     }
 
-    updatePost(postId: string, postData: any) {
-        return this.apiService.put(`/posts/${postId}`, postData);
+    updatePost(postId: string, postData: Post) {
+        return this.apiService.put(`/${postId}`, postData);
     }
 
     deletePost(postId: string) {
-        return this.apiService.delete(`/posts/${postId}`);
+        return this.apiService.delete(`/${postId}`);
     }
 }
 

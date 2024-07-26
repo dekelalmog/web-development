@@ -1,13 +1,40 @@
-import { useState } from 'react'
-import './App.css'
+import { useRoutes } from 'react-router-dom';
+import Home from './components/Home/Home';
+import Login from './components/Login/login';
+import Register from './components/Register/Register';
+import UserPage from './components/UserPage/UserPage';
+import PostPage from './components/PostPage/PostPage';
 
 function App() {
 
-  return (
-    <>
-      App
-    </>
-  )
+  const routes = useRoutes([
+    {
+      path: "/",
+      element: <Home />,
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
+    {
+      path: "/register",
+      element: <Register />,
+    },
+    {
+      path: "/user/:id",
+      element: <UserPage />,
+    },
+    {
+      path: "/post/:id",
+      element: <PostPage />,
+    },
+    {
+      path: "*",
+      element: <h1>404 Not Found</h1>,
+    },
+  ]);
+  
+  return routes;
 }
 
 export default App
