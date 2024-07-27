@@ -16,6 +16,17 @@ const base = "http://127.0.0.1:3000/"
  */
 
 /**
+* @swagger
+* components:
+*   securitySchemes:
+*     bearerAuth:
+*       type: http
+*       scheme: bearer
+*       bearerFormat: JWT
+*/
+
+
+/**
  * @swagger
  * components:
  *  schemas:
@@ -113,6 +124,8 @@ router.get('/:id', getById)
  *   post:
  *     summary: Create a new post
  *     tags: [Post]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -137,6 +150,8 @@ router.post('/', authMiddleware, addPost);
  *   put:
  *     summary: Update a post
  *     tags: [Post]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -168,6 +183,8 @@ router.put('/:id', authMiddleware, updatePost);
  *   put:
  *     summary: Add a comment to a post
  *     tags: [Post]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -182,7 +199,7 @@ router.put('/:id', authMiddleware, updatePost);
  *           schema:
  *             type: object
  *             properties:
- *               owner:
+ *               ownerId:
  *                 type: string
  *                 description: The owner of the comment
  *               text:
@@ -209,6 +226,8 @@ router.put('/comment/:id',authMiddleware, addComment);
  *   delete:
  *     summary: Delete a post
  *     tags: [Post]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

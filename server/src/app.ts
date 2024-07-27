@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === "test") {
 } else {
     env.config();
 }
-  
+
 const app = express();
 
 const initApp = (): Promise<Express> => {

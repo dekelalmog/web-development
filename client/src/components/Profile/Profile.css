@@ -70,6 +70,6 @@ label.profile-button:hover {
     margin-bottom: 1rem;
     padding: 0.5rem;
     font-size: 1rem;
-    width: 200px; /* Match the width of the buttons */
+    width: 200px;
     box-sizing: border-box;
 }

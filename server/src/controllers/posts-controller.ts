@@ -36,16 +36,16 @@ export async function getById(req: Request, res: Response) {
 export async function addPost(req: Request, res: Response) {
     const post: Post = req.body;
 
-    const user = await UserModel.findById(post.ownerId);
-
-    if (!user) {
-        res.status(404).send("user not found")
-    }
-
-    post.ownerImageUrl = user.imageUrl
-    post.ownerName = user.name
-    
     try {
+        const user = await UserModel.findById(post.ownerId);
+        
+        if (!user) {
+            res.status(404).send("user not found");
+            return;
+        }
+
+        post.ownerImageUrl = user.imageUrl
+        post.ownerName = user.name
         const newPost = await model.create(post);
         res.status(201).json(newPost);
     } catch (err) {

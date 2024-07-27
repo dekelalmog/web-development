@@ -208,6 +208,7 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
   }
   jwt.verify(token, process.env.TOKEN_SECRET, (err, data: jwt.JwtPayload) => {
       if (err) {
+          console.log("JWT ERROR ", err.message)
           return res.sendStatus(401);
       }
       const id = data._id;
