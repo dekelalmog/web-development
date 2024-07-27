@@ -2,7 +2,11 @@ import getWeather from "../service/weatherApi";
 import { Request, Response } from 'express';
 
 export async function getTodaysWeather(req: Request, res: Response) {
-    const weather = await getWeather()
+    try {
+        const weather = await getWeather()
 
-    res.status(200).json(weather)
+        res.status(200).json(weather)
+    } catch (err) {
+        res.status(500).send("Internal Server Error")
+    }
 }

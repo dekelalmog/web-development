@@ -23,7 +23,7 @@ const base = "http://127.0.0.1:3000/"
  *    type: object
  *    required:
  *      - description
- *      - owner
+ *      - ownerId
  *    properties:
  *      _id:
  *        type: string
@@ -34,9 +34,15 @@ const base = "http://127.0.0.1:3000/"
  *      imageUrl:
  *        type: string
  *        description: image URL from the backend
- *      owner:
+ *      ownerId:
  *        type: string
  *        description: the user ID that owns the post
+ *      ownerName:
+ *        type: string
+ *        description: the user name that owns the post
+ *      ownerImageUrl:
+ *        type: string
+ *        description: the user image url
  *      comments:
  *        type: array
  *        items:

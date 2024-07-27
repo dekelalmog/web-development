@@ -1,5 +1,5 @@
 import express from 'express';
-import { login, register, getById, logout, refreshToken, googleLogin } from '../controllers/user-controller';
+import { login, register, getById, logout, refreshToken, googleLogin, updateUser } from '../controllers/user-controller';
 
 const router = express.Router();
 
@@ -72,7 +72,7 @@ router.get('/:id', getById);
 
 /**
  * @swagger
- * /login:
+ * /users/login:
  *   post:
  *     summary: User login
  *     tags: [User]
@@ -102,7 +102,7 @@ router.post('/login', login);
 
 /**
  * @swagger
- * /register:
+ * /users/register:
  *   post:
  *     summary: User registration
  *     tags: [User]
@@ -132,7 +132,7 @@ router.post('/register', register);
 
 /**
  * @swagger
- * /refresh-token:
+ * /users/refresh-token:
  *   post:
  *     summary: Refresh authentication token
  *     tags: [User]
@@ -159,7 +159,7 @@ router.post('/refresh-token', refreshToken);
 
 /**
  * @swagger
- * /logout:
+ * /users/logout:
  *   post:
  *     summary: User logout
  *     tags: [User]
@@ -186,7 +186,7 @@ router.post('/logout', logout);
 
 /**
  * @swagger
- * /google-login:
+ * /users/google-login:
  *   post:
  *     summary: User login via Google
  *     tags: [User]
@@ -237,4 +237,61 @@ router.post('/logout', logout);
  */
 router.post('/google-login', googleLogin);
 
+/**
+ * @swagger
+ * /users/:
+ *   put:
+ *     summary: Update user details
+ *     tags: [User]
+ *     description: Updates the user's image URL and name.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               _id:
+ *                 type: string
+ *                 description: The user ID
+ *                 example: "60d0fe4f5311236168a109ca"
+ *               imageUrl:
+ *                 type: string
+ *                 description: The URL of the user's profile image
+ *                 example: "image/path/here"
+ *               name:
+ *                 type: string
+ *                 description: The user's name
+ *                 example: "Updated User"
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       description: The user ID
+ *                       example: "60d0fe4f5311236168a109ca"
+ *                     email:
+ *                       type: string
+ *                       description: The user's email
+ *                       example: "user@example.com"
+ *                     imageUrl:
+ *                       type: string
+ *                       description: The URL of the user's profile image
+ *                       example: "new/image/path/here"
+ *                     name:
+ *                       type: string
+ *                       description: The user's name
+ *                       example: "Updated User"
+ *       500:
+ *         description: Internal Server Error
+ */
+router.put('/', updateUser)
 export default router;

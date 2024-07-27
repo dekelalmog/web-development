@@ -29,12 +29,11 @@ describe('User Routes', () => {
     
     beforeAll(async () => {
       const user = await UserModel.create({
-        id: 1,
         email: userEmail,
         password: 'password123',
         tokens: [],
       });
-      userId = user._id.toString();
+      userId = user._id;
     });
 
     afterAll(async () => {
@@ -44,7 +43,7 @@ describe('User Routes', () => {
     test('should get user by ID', async () => {
       const response = await request(app).get(`/users/${userId}`);
       expect(response.status).toBe(200);
-      expect(response.body.user.email).toBe(userEmail);
+      expect(response.body.email).toBe(userEmail);
     });
 
     test('should return 404 if user not found', async () => {
@@ -264,6 +263,48 @@ describe('User Routes', () => {
         .send({ credential });
 
       expect(response.statusCode).toEqual(400);
+    });
+  });
+
+  describe('PUT /users', () => {
+    let user: any;
+  
+    beforeAll(async () => {
+      user = await UserModel.create({
+        email: 'updateuser@example.com',
+        password: await bcrypt.hash('password123', 10),
+        tokens: [],
+        imageUrl: 'URL1',
+        name: 'Old User',
+      });
+    });
+  
+    afterAll(async () => {
+      await UserModel.findByIdAndDelete(user._id);
+    });
+  
+    test('should update user details', async () => {
+      const updatedUser = {
+        _id: user._id,
+        imageUrl: 'URL2',
+        name: 'Updated User',
+      };
+  
+      const response = await request(app).put('/users/').send(updatedUser);
+      expect(response.status).toBe(200);
+      expect(response.body.imageUrl).toBe(updatedUser.imageUrl);
+      expect(response.body.name).toBe(updatedUser.name);
+    });
+  
+    test('should return 500 for internal error', async () => {
+      const invalidUser = {
+        _id: 'invalidId',
+        imageUrl: 'http://example.com/updated-image.jpg',
+        name: 'Updated User',
+      };
+  
+      const response = await request(app).put('/users/').send(invalidUser);
+      expect(response.status).toBe(500);
     });
   });
 });

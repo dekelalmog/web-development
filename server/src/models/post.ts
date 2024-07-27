@@ -5,14 +5,18 @@ export interface Post extends Document {
     _id?: string;
     description: string;
     imageUrl?: string;
-    owner: string;
+    ownerName?: string;
+    ownerId: string;
+    ownerImageUrl?: string;
     comments: Comment[];
 }
 
 const postSchema: Schema = new Schema({
     description: { type: String, required: true },
     imageUrl: { type: String },
-    owner: { type: String, required: true },
+    ownerId: { type: String, required: true },
+    ownerImageUrl: {type: String},
+    ownerName: {type: String},
     comments: [{ owner: String, text: String }]
 });
 

@@ -25,7 +25,6 @@ describe("Weather API test" , () => {
       expect(weatherForecast.time.length).toEqual(24);
       expect(Object.keys(weatherForecast.temperature).length).toEqual(24);
     } catch (err) {
-      console.log(err);
       expect(1).toEqual(2);
     }
   })

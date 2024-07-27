@@ -49,6 +49,19 @@ export const logout = () => {
   });
 };
 
+export const updateUser = (_id: string, name: string, imageUrl?: string) => {
+  return new Promise<User>((resolve, reject) => {
+    apiClient
+      .put("users/", {_id, imageUrl, name})
+      .then((response: any) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
 export const refreshToken = () => {
   console.log("users/refreshToken ...");
 
@@ -65,7 +78,6 @@ export const refreshToken = () => {
 };
 
 export const getUserById = (userId: string) => {
-  console.log("getUserById ...", userId);
 
   return new Promise<User>((resolve, reject) => {
     apiClient

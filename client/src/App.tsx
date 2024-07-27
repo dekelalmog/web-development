@@ -4,6 +4,7 @@ import Login from './components/Login/login';
 import Register from './components/Register/Register';
 import UserPage from './components/UserPage/UserPage';
 import PostPage from './components/PostPage/PostPage';
+import Profile from './components/Profile/Profile';
 
 function App() {
 
@@ -21,8 +22,8 @@ function App() {
       element: <Register />,
     },
     {
-      path: "/user/:id",
-      element: <UserPage />,
+      path: "/profile",
+      element: <Profile />,
     },
     {
       path: "/post/:id",

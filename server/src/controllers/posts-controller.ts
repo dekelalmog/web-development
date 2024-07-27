@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import PostModel from '../models/post';
+import PostModel, { Post } from '../models/post';
 import { Comment } from '../models/comment';
+import UserModel from '../models/user';
 
 const model = PostModel
 
@@ -33,7 +34,17 @@ export async function getById(req: Request, res: Response) {
 
 // Add a post
 export async function addPost(req: Request, res: Response) {
-    const post = req.body;
+    const post: Post = req.body;
+
+    const user = await UserModel.findById(post.ownerId);
+
+    if (!user) {
+        res.status(404).send("user not found")
+    }
+
+    post.ownerImageUrl = user.imageUrl
+    post.ownerName = user.name
+    
     try {
         const newPost = await model.create(post);
         res.status(201).json(newPost);
@@ -66,7 +77,6 @@ export async function deletePost(req: Request, res: Response) {
 
 export async function addComment(req: Request, res: Response) {
     const comment: Comment = {
-        // owner: req.user.id,
         owner: req.body.owner,
         text: req.body.text,
     }
