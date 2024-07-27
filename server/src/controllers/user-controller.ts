@@ -12,7 +12,7 @@ export const getById = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;
     const user = await UserModel.findById(userId);
-    res.status(200).json({ user });
+    res.status(200).json(user);
   } catch (error) {
     res.status(404).json({ error: "Not Found" });
   }
@@ -258,7 +258,7 @@ const extractToken = (req: Request): string => {
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const user = await UserModel.findByIdAndUpdate(req.body._id, {imageUrl: req.body.imageUrl, name: req.body.name}, {new: true})
-    res.status(200).json({ user });
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).send("Internal Error");
   }

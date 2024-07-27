@@ -1,9 +1,11 @@
 // src/pages/Profile.tsx
 import React, { useState, useEffect } from 'react';
 import { getUserById, updateUser } from '../../services/user-service';
+import { uploadFile } from '../../services/file-service';
 import { User } from '../../services/interfaces';
 import Toolbar from '../Toolbar/Toolbar';
 import './Profile.css';
+import { imageFullPath } from '../../services/utils';
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -11,31 +13,18 @@ const Profile: React.FC = () => {
   const [newUsername, setNewUsername] = useState('');
 
   useEffect(() => {
-    // For testing: Set up localStorage with a test user ID
-    if (process.env.NODE_ENV === 'development' && !localStorage.getItem('userId')) {
-      localStorage.setItem('userId', 'test-user-id');
-    }
 
+    localStorage.setItem('userId', '66a3bbc8fc93902ae0587136');
     fetchUserData();
   }, []);
 
   const fetchUserData = async () => {
     try {
       const userId = localStorage.getItem('userId');
+
       if (userId) {
-        if (process.env.NODE_ENV === 'development' && userId === 'test-user-id') {
-          // Mock user data for testing
-          setUser({
-            _id: 'test-user-id',
-            name: 'Test User',
-            email: 'test@example.com',
-            imageUrl: 'https://via.placeholder.com/150',
-            tokens: [],
-          });
-        } else {
           const userData = await getUserById(userId);
           setUser(userData);
-        }
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -46,10 +35,8 @@ const Profile: React.FC = () => {
     const file = event.target.files?.[0];
     if (file && user) {
       try {
-        // Implement file upload logic here
-        // For now, we'll just update the user with a new URL
-        const imageUrl = URL.createObjectURL(file);
-        const updatedUser = await updateUser(user._id, user.name, imageUrl);
+        const imageUrl = await uploadFile(file)
+        const updatedUser = await updateUser(user._id, user.name, imageFullPath(imageUrl));
         setUser(updatedUser);
       } catch (error) {
         console.error('Error updating profile picture:', error);
@@ -80,7 +67,7 @@ const Profile: React.FC = () => {
       <div className="profile-content">
         <h1>Hello, {user.name}!</h1>
         <div className="profile-picture">
-          <img src={user.imageUrl || '/default-avatar.png'} alt={user.name} />
+          <img src={user.imageUrl || '/src/assets/default-avatar.jpg'} alt={user.name} />
         </div>
         <div className="profile-actions">
           <input

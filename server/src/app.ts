@@ -34,6 +34,7 @@ const initApp = (): Promise<Express> => {
             app.use('/users', userRouter);
             app.use('/weather', weatherRouter)
             app.use('/file', fileRouter)
+            app.use('/images', express.static("images"))
             
             app.get('/', (req, res) => {
                 res.send('default route');

@@ -43,7 +43,7 @@ describe('User Routes', () => {
     test('should get user by ID', async () => {
       const response = await request(app).get(`/users/${userId}`);
       expect(response.status).toBe(200);
-      expect(response.body.user.email).toBe(userEmail);
+      expect(response.body.email).toBe(userEmail);
     });
 
     test('should return 404 if user not found', async () => {
@@ -292,8 +292,8 @@ describe('User Routes', () => {
   
       const response = await request(app).put('/users/').send(updatedUser);
       expect(response.status).toBe(200);
-      expect(response.body.user.imageUrl).toBe(updatedUser.imageUrl);
-      expect(response.body.user.name).toBe(updatedUser.name);
+      expect(response.body.imageUrl).toBe(updatedUser.imageUrl);
+      expect(response.body.name).toBe(updatedUser.name);
     });
   
     test('should return 500 for internal error', async () => {

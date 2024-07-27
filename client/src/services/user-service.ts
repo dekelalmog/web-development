@@ -80,7 +80,6 @@ export const refreshToken = () => {
 };
 
 export const getUserById = (userId: string) => {
-  console.log("getUserById ...", userId);
 
   return new Promise<User>((resolve, reject) => {
     apiClient
