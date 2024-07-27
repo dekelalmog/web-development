@@ -12,7 +12,7 @@ export const getById = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;
     const user = await UserModel.findById(userId);
-    res.status(200).json({ user });
+    res.status(200).json(user);
   } catch (error) {
     res.status(404).json({ error: "Not Found" });
   }
@@ -79,7 +79,7 @@ export const login = async (req: Request, res: Response) => {
 
     const tokens = await generateTokens(user);
 
-    res.status(200).json({ message: "User logged in successfully", tokens });
+    res.status(200).json({ tokens, _id: user._id});
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }

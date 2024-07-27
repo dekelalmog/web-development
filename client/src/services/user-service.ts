@@ -12,7 +12,7 @@ export const register = (
 
   return new Promise<User>((resolve, reject) => {
     apiClient
-      .post("register", { email, password, imgageUrl, name })
+      .post("users/register", { email, password, imgageUrl, name })
       .then((response: any) => {
         resolve(response.data);
       })
@@ -22,18 +22,16 @@ export const register = (
   });
 };
 
-export const login = (email: string, password: string) => {
+export const login = async (email: string, password: string) => {
   console.log("login ...", email, password);
-  return new Promise<User>((resolve, reject) => {
-    apiClient
-      .post("login", { email, password })
-      .then((response: any) => {
-        resolve(response.data);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  try {
+    const response = await apiClient.post("users/login", { email, password });
+    localStorage.setItem("accessToken", response.data.tokens.accessToken);
+    localStorage.setItem("refreshToken", response.data.tokens.refreshToken);
+    localStorage.setItem("userId", response.data._id);
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const logout = () => {
@@ -41,7 +39,7 @@ export const logout = () => {
 
   return new Promise<void>((resolve, reject) => {
     apiClient
-      .post("logout", {})
+      .post("users/logout", {})
       .then((response: any) => {
         resolve();
       })
@@ -52,7 +50,7 @@ export const logout = () => {
 };
 
 export const refreshToken = () => {
-  console.log("refreshToken ...");
+  console.log("users/refreshToken ...");
 
   return new Promise<User>((resolve, reject) => {
     apiClient
@@ -71,7 +69,7 @@ export const getUserById = (userId: string) => {
 
   return new Promise<User>((resolve, reject) => {
     apiClient
-      .get(userId)
+      .get(`users/${userId}`)
       .then((response: any) => {
         resolve(response.data);
       })
@@ -85,7 +83,7 @@ export const googleSignin = (credentialResponse: CredentialResponse) => {
   return new Promise<User>((resolve, reject) => {
     console.log("googleSignin ...");
     apiClient
-      .post("google-login", credentialResponse)
+      .post("users/google-login", credentialResponse)
       .then((response: any) => {
         resolve(response.data);
       })

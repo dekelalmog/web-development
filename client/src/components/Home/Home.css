@@ -1,0 +1,41 @@
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+
+  .toogle-btn {
+    margin-bottom: 20px;
+    background-color: black;
+    color: whitesmoke;
+
+    i {
+      margin-left: 10px;
+    }
+  }
+
+  .post-card {
+    width: 300px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    h6 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+  }
+}

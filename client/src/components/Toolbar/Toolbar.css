@@ -1,0 +1,70 @@
+/* src/components/Toolbar.css */
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2ecc71;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .app-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ffffff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .app-name:hover {
+      color: #ecf0f1;
+    }
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+    }
+    
+    .profile-icon {
+      color: #ffffff;
+      font-size: 1.2rem;
+      margin-right: 1rem;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .profile-icon:hover {
+      color: #ecf0f1;
+    }
+    
+    .logout-button {
+      background-color: #27ae60; /* A darker shade of green */
+      color: #ffffff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+    
+    .logout-button:hover {
+      background-color: #219653;
+    }
+    
+    @media (max-width: 768px) {
+      .toolbar {
+        padding: 1rem;
+      }
+    
+      .app-name {
+        font-size: 1.2rem;
+      }
+    
+      .logout-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+    }
+  }
+  
+  
+  

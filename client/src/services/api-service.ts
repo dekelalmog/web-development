@@ -1,7 +1,6 @@
 import axios from 'axios';
-// import { SERVER_URL } from './consts';
 
-const SERVER_URL = 'http://localhost:300';
+const SERVER_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
 const apiClient = axios.create({
     baseURL: SERVER_URL,

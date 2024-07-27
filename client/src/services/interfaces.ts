@@ -1,8 +1,10 @@
 export interface Post {
-  _id?: string;
+  _id: string;
   description: string;
   imageUrl?: string;
-  owner: string;
+  ownerName: string;
+  ownerId: string;
+  ownerImageUrl?: string;
   comments: Comment[];
 }
 
@@ -12,7 +14,7 @@ export interface Comment {
 }
 
 export interface User {
-  _id: number;
+  _id: string;
   name: string;
   email: string;
   password?: string;
