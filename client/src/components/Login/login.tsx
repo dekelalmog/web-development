@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { googleSignin, login } from "../../services/user-service";
-import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { Navigate } from "react-router-dom";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { googleSignin, login } from "../../services/user-service";
+import "./login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");

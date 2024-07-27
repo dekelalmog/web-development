@@ -22,18 +22,16 @@ export const register = (
   });
 };
 
-export const login = (email: string, password: string) => {
+export const login = async (email: string, password: string) => {
   console.log("login ...", email, password);
-  return new Promise<User>((resolve, reject) => {
-    apiClient
-      .post("users/login", { email, password })
-      .then((response: any) => {
-        resolve(response.data);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  try {
+    const response = await apiClient.post("users/login", { email, password });
+    localStorage.setItem("accessToken", response.data.tokens.accessToken);
+    localStorage.setItem("refreshToken", response.data.tokens.refreshToken);
+    localStorage.setItem("userId", response.data._id);
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const logout = () => {
