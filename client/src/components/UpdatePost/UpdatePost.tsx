@@ -13,10 +13,15 @@ interface Props {
 }
 
 const UpdatePost: React.FC<Props> = (props: Props) => {
-  const [description, setDescription] = useState<string>("");
+  const [description, setDescription] = useState<string>(props.post.description);
   const [file, setFile] = useState<File>();
 
   const closeModal = useCallback(() => props.setShowModal(false), []);
+
+  const handleDelete = async () => {
+    props.deletePost(props.post._id!);
+    closeModal();
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,14 +52,14 @@ const UpdatePost: React.FC<Props> = (props: Props) => {
 
   return (
     <div>
-      <Modal isOpen={props.showModal} onRequestClose={closeModal}>
+      <Modal ariaHideApp={false} isOpen={props.showModal} onRequestClose={closeModal}>
         <h2>Hello</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Description"
             onChange={(e) => setDescription(e.target.value)}
-            value={props.post.description}
+            value={description}
             required
           />
           {(file || props.post.imageUrl) && (
@@ -69,12 +74,11 @@ const UpdatePost: React.FC<Props> = (props: Props) => {
             id="profile-picture-input"
             accept="image/*"
             onChange={handleChangePicture}
-            style={{ display: "none" }}
           />
           <button type="submit">Update Post</button>
         </form>
         <button onClick={closeModal}>Close</button>
-        <button onClick={() => props.deletePost(props.post._id!)}>Delete</button>
+        <button onClick={handleDelete}>Delete</button>
       </Modal>
     </div>
   );

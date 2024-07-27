@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   createPost,
+  deletePost,
   getAllPosts,
   updatePost,
 } from "../../services/posts-service";
@@ -14,7 +15,7 @@ import { getUserById } from "../../services/user-service";
 
 const Home: React.FC = () => {
   const userId = localStorage.getItem("userId");
-  const [posts, setPosts] = useState<Post[]>();
+  const [posts, setPosts] = useState<Post[]>([]);
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showEditPost, setShowEditPost] = useState(false);
   const [showAllPosts, setShowAllPosts] = useState(true);
@@ -64,8 +65,10 @@ const Home: React.FC = () => {
           comments: [],
           ownerImageUrl: user.imageUrl,
         };
-        createPost(newPost);
-        console.log("Creating post:", newPost);
+        createPost(newPost).then((post) => {
+          setPosts([post, ...posts])
+          console.log("Creating post:", newPost);
+        });
       })
       .catch((error) => {
         console.error("Error creating post:", error);
@@ -78,20 +81,28 @@ const Home: React.FC = () => {
     const updatedPost: Post = {
       ...selectedPost,
       description,
-      imageUrl,
+      imageUrl: imageUrl || selectedPost.imageUrl,
     };
 
     try {
       await updatePost(updatedPost);
+      setPosts(posts?.map((post) => {
+        if (post._id == updatedPost._id) {
+          return updatedPost;
+        } else {
+          return post;
+        }
+      }));
       console.log("Updating post:", updatedPost);
     } catch (error) {
       console.error("Error updating post:", error);
     }
   };
 
-  const deletePost = async (postId: string) => {
+  const deleteSelectedPost = async (postId: string) => {
     try {
       await deletePost(postId);
+      setPosts(posts?.filter((post) => post._id != postId))
       console.log("Deleting post with id:", postId);
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -113,7 +124,7 @@ const Home: React.FC = () => {
           showModal={showEditPost}
           setShowModal={setShowEditPost}
           updatePost={editPost}
-          deletePost={deletePost}
+          deletePost={deleteSelectedPost}
           post={selectedPost!}
         />
       )}

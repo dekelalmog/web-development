@@ -65,7 +65,6 @@ const CreatePost: React.FC<Props> = (props: Props) => {
             id="profile-picture-input"
             accept="image/*"
             onChange={handleChangePicture}
-            style={{ display: "none" }}
           />
           <button type="submit">Create Post</button>
         </form>

@@ -9,8 +9,8 @@ export const getPostById = (postId: string): Promise<Post> => {
   return apiClient.get(`posts/${postId}`).then((res) => res.data);
 };
 
-export const createPost = (postData: Post) => {
-  return apiClient.post("posts/", postData);
+export const createPost = (postData: Post): Promise<Post> => {
+  return apiClient.post("posts/", postData).then((res) => res.data);
 };
 
 export const updatePost = (postData: Post) => {
