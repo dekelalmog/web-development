@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import Modal from "react-modal";
 import { imageFullPath } from "../../services/utils";
 import { uploadFile } from "../../services/file-service";
+import "./CreatePost.css";
 
 interface Props {
   showModal: boolean;
@@ -15,8 +16,7 @@ const CreatePost: React.FC<Props> = (props: Props) => {
 
   const closeModal = useCallback(() => props.setShowModal(false), []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (!title) {
       return;
     }
@@ -43,17 +43,33 @@ const CreatePost: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div>
-      <Modal isOpen={props.showModal} onRequestClose={closeModal}>
-        <h2>Hello</h2>
-        <form onSubmit={handleSubmit}>
+    <Modal
+      isOpen={props.showModal}
+      ariaHideApp={false}
+      onRequestClose={closeModal}
+      style={{
+        content: {
+          width: "300px",
+          height: "400px",
+          top: "50%",
+          left: "50%",
+          right: "auto",
+          bottom: "auto",
+          marginRight: "-50%",
+          transform: "translate(-50%, -50%)",
+        },
+      }}
+    >
+      <div className="create-post">
+        <h2>Create Post</h2>
+        <form>
           <input
             type="text"
-            placeholder="Title"
+            placeholder="Write Description"
             onChange={(e) => setTitle(e.target.value)}
             required
           />
-           {(file) && (
+          {file && (
             <img
               src={URL.createObjectURL(file)}
               alt="Selected Image"
@@ -66,11 +82,15 @@ const CreatePost: React.FC<Props> = (props: Props) => {
             accept="image/*"
             onChange={handleChangePicture}
           />
-          <button type="submit">Create Post</button>
         </form>
-        <button onClick={closeModal}>Close</button>
-      </Modal>
-    </div>
+        <div className="actions">
+          <button type="submit" onClick={handleSubmit}>
+            Create Post
+          </button>
+          <button onClick={closeModal}>Close</button>
+        </div>
+      </div>
+    </Modal>
   );
 };
 

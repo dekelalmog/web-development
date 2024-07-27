@@ -1,11 +1,27 @@
 // src/components/Toolbar.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../services/user-service";
 import "./Toolbar.css";
+import { getWeather } from "../../services/weather-service";
 
 const Toolbar: React.FC = () => {
   const navigate = useNavigate();
+  const [weather, setWeather] = React.useState<number>();
+
+  useEffect(() => {
+    getWeather().then((weather) => {
+      const currentHour = new Date().getHours();
+      setWeather(weather.temperature[currentHour]);
+    });
+  }, []);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleLogout = async () => {
     try {
@@ -19,7 +35,7 @@ const Toolbar: React.FC = () => {
 
   return (
     <nav className="toolbar">
-      <div className="weather">24C</div>
+      <div className="weather">{weather?.toFixed(1)}°C</div>
       <Link to="/" className="app-name">
         TravelerApp
       </Link>

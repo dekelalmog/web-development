@@ -1,0 +1,19 @@
+.update-post {
+  .actions {
+    justify-content: space-between;
+  }
+
+  .delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+  }
+
+  .close-btn {
+    width: fit-content;
+    position: absolute;
+    right: 0;
+    padding: 5px 10px;
+    background-color: #6c757d;
+    color: #fff;
+  }
+}

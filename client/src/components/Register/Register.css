@@ -1,0 +1,66 @@
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+
+  input[type="email"],
+  input[type="password"],
+  input[type="text"],
+  input[type="file"] {
+    padding: 5px;
+    margin-bottom: 10px;
+  }
+
+  button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+
+  .actions {
+    display: flex;
+
+    button {
+      margin-left: 10px;
+    }
+  }
+
+  .register-nav {
+    margin-top: 20px;
+
+    .link {
+      cursor: pointer;
+      text-decoration: underline;
+      color: #007bff;
+    }
+  }
+
+  .error {
+    color: red;
+    margin-bottom: 1rem;
+  }
+}
