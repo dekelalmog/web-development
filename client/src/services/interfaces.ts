@@ -1,8 +1,10 @@
 export interface Post {
-  _id?: string;
+  _id: string;
   description: string;
   imageUrl?: string;
-  owner: string;
+  ownerName: string;
+  ownerId: string;
+  ownerImageUrl?: string;
   comments: Comment[];
 }
 

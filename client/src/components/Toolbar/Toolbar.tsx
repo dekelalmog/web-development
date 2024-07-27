@@ -1,41 +1,31 @@
 // src/components/Toolbar.tsx
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { logout } from '../../services/user-service';
-import './Toolbar.css';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./Toolbar.css";
 
 const Toolbar: React.FC = () => {
   const navigate = useNavigate();
-  const [temperature, setTemperature] = useState('');
 
-  useEffect(() => {
-    // Fetch temperature from backend (to be implemented)
-    // For now, we'll use a placeholder
-    setTemperature('24°C');
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      navigate('/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
+  const handleLogout = () => {
+    // Implement logout logic here
+    // For example: clear local storage, remove auth token, etc.
+    localStorage.removeItem("userId");
+    navigate("/login");
   };
 
   return (
     <nav className="toolbar">
-      <div className="toolbar-left">
-        <span className="temperature">{temperature}</span>
-      </div>
-      <Link to="/home" className="app-name">TravelerApp</Link>
-      <div className="toolbar-right">
+      <div className="weather">24C</div>
+      <Link to="/home" className="app-name">
+        TravelerApp
+      </Link>
+      <div className="toolbar-actions">
         <Link to="/profile" className="profile-icon">
-          <i className="fas fa-user"></i>
+          <i className="fa fa-user" title="profile page" aria-hidden="true"></i>
         </Link>
-        <button onClick={handleLogout} className="logout-button">Logout</button>
+        <button onClick={handleLogout} title="Logout" className="logout-button">
+          Logout
+        </button>
       </div>
     </nav>
   );

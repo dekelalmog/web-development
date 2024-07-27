@@ -79,7 +79,7 @@ export const login = async (req: Request, res: Response) => {
 
     const tokens = await generateTokens(user);
 
-    res.status(200).json({ message: "User logged in successfully", tokens });
+    res.status(200).json({ tokens, _id: user._id});
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
