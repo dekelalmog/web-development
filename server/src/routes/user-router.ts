@@ -10,6 +10,19 @@ const router = express.Router();
  *  description: User management API
  */
 
+
+
+/**
+* @swagger
+* components:
+*   securitySchemes:
+*     bearerAuth:
+*       type: http
+*       scheme: bearer
+*       bearerFormat: JWT
+*/
+
+
 /**
  * @swagger
  * components:
@@ -76,6 +89,8 @@ router.get('/:id', getById);
  *   post:
  *     summary: User login
  *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -106,6 +121,8 @@ router.post('/login', login);
  *   post:
  *     summary: User registration
  *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -136,6 +153,8 @@ router.post('/register', register);
  *   post:
  *     summary: Refresh authentication token
  *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -163,6 +182,8 @@ router.post('/refresh-token', refreshToken);
  *   post:
  *     summary: User logout
  *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -190,6 +211,8 @@ router.post('/logout', logout);
  *   post:
  *     summary: User login via Google
  *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -243,6 +266,8 @@ router.post('/google-login', googleLogin);
  *   put:
  *     summary: Update user details
  *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
  *     description: Updates the user's image URL and name.
  *     requestBody:
  *       required: true
