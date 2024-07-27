@@ -1,6 +1,7 @@
 import { useState, FC, FormEvent } from 'react';
 import { googleSignin, register } from '../../services/user-service';
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
+import { Navigate } from 'react-router-dom';
 
 const Register: FC = () => {
     const [username, setUsername] = useState('');
@@ -12,6 +13,7 @@ const Register: FC = () => {
         try {
             await register(username, password, '', 'name');
             console.log('User registered successfully!');
+            return <Navigate to="/" />;
             // Add any additional logic or redirect here
         } catch (error) {
             console.error('Error registering user:', error);

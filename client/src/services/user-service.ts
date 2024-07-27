@@ -1,4 +1,5 @@
 import { CredentialResponse } from "@react-oauth/google";
+import axios from "axios";
 import apiClient from "./api-service";
 import { User } from "./interfaces";
 
@@ -34,19 +35,22 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-export const logout = () => {
+export const logout = async () => {
   console.log("logout ...");
 
-  return new Promise<void>((resolve, reject) => {
-    apiClient
-      .post("users/logout", {})
-      .then((response: any) => {
-        resolve();
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  try {
+    const client = axios.create();
+    await client.post("users/logout", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+      },
+    });
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("userId");
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const updateUser = (_id: string, name: string, imageUrl?: string) => {
