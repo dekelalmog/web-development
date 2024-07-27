@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { googleSignin, login } from "../../services/user-service";
-import "./login.css";
+import "./Login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -17,7 +18,7 @@ const Login = () => {
 
     try {
       await login(email, password);
-      return <Navigate to="/" />;
+      navigate("/");
     } catch (error) {
       setError("Invalid email or password");
     }
@@ -26,7 +27,8 @@ const Login = () => {
   const googleResponse = async (response: CredentialResponse) => {
     try {
       const res = await googleSignin(response);
-      console.log(res);
+      console.log("user logged in with google", res);
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -54,8 +56,19 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
         <div className="actions">
-          <button onClick={handleLogin}>Login</button>
           <GoogleLogin onSuccess={googleResponse} onError={googleError} />
+          <button onClick={handleLogin}>Login</button>
+        </div>
+        <div className="register-nav">
+          Don't have an account?{" "}
+          <span
+            className="link"
+            onClick={() => {
+              navigate("/register");
+            }}
+          >
+            Register
+          </span>
         </div>
       </div>
     </div>

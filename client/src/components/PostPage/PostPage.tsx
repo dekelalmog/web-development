@@ -33,7 +33,10 @@ const PostPage: React.FC = () => {
   }, [id]);
 
   useEffect(() => {
-    if (!post || !post.comments.length) return;
+    if (!post || !post.comments.length) {
+      setLoading(false);
+      return;
+    }
 
     const fetchUsers = async () => {
       try {

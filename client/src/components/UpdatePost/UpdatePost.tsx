@@ -3,6 +3,8 @@ import Modal from "react-modal";
 import { imageFullPath } from "../../services/utils";
 import { uploadFile } from "../../services/file-service";
 import { Post } from "../../services/interfaces";
+import "../CreatePost/CreatePost.css";
+import "./UpdatePost.css";
 
 interface Props {
   showModal: boolean;
@@ -13,7 +15,9 @@ interface Props {
 }
 
 const UpdatePost: React.FC<Props> = (props: Props) => {
-  const [description, setDescription] = useState<string>(props.post.description);
+  const [description, setDescription] = useState<string>(
+    props.post.description
+  );
   const [file, setFile] = useState<File>();
 
   const closeModal = useCallback(() => props.setShowModal(false), []);
@@ -21,7 +25,7 @@ const UpdatePost: React.FC<Props> = (props: Props) => {
   const handleDelete = async () => {
     props.deletePost(props.post._id!);
     closeModal();
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,13 +55,30 @@ const UpdatePost: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div>
-      <Modal ariaHideApp={false} isOpen={props.showModal} onRequestClose={closeModal}>
-        <h2>Hello</h2>
+    <Modal
+      isOpen={props.showModal}
+      ariaHideApp={false}
+      onRequestClose={closeModal}
+      style={{
+        content: {
+          width: "300px",
+          height: "400px",
+          top: "50%",
+          left: "50%",
+          right: "auto",
+          bottom: "auto",
+          marginRight: "-50%",
+          transform: "translate(-50%, -50%)",
+        },
+      }}
+    >
+      <div className="create-post update-post">
+      <button className="close-btn" onClick={closeModal} title="close">X</button>
+        <h2>Update post</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Description"
+            placeholder="Write Description"
             onChange={(e) => setDescription(e.target.value)}
             value={description}
             required
@@ -75,12 +96,13 @@ const UpdatePost: React.FC<Props> = (props: Props) => {
             accept="image/*"
             onChange={handleChangePicture}
           />
-          <button type="submit">Update Post</button>
         </form>
-        <button onClick={closeModal}>Close</button>
-        <button onClick={handleDelete}>Delete</button>
-      </Modal>
-    </div>
+        <div className="actions">
+          <button className="delete-btn" title="Delete" onClick={handleDelete}>Delete</button>
+          <button type="submit" title="Update">Update</button>
+        </div>
+      </div>
+    </Modal>
   );
 };
 

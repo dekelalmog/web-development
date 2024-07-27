@@ -1,45 +1,50 @@
 // src/pages/Profile.tsx
-import React, { useState, useEffect } from 'react';
-import { getUserById, updateUser } from '../../services/user-service';
-import { uploadFile } from '../../services/file-service';
-import { User } from '../../services/interfaces';
-import Toolbar from '../Toolbar/Toolbar';
-import './Profile.css';
-import { imageFullPath } from '../../services/utils';
+import React, { useState, useEffect } from "react";
+import { getUserById, updateUser } from "../../services/user-service";
+import { uploadFile } from "../../services/file-service";
+import { User } from "../../services/interfaces";
+import Toolbar from "../Toolbar/Toolbar";
+import "./Profile.css";
+import { imageFullPath } from "../../services/utils";
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [newUsername, setNewUsername] = useState('');
+  const [newUsername, setNewUsername] = useState("");
 
   useEffect(() => {
-
-    localStorage.setItem('userId', '66a3bbc8fc93902ae0587136');
     fetchUserData();
   }, []);
 
   const fetchUserData = async () => {
     try {
-      const userId = localStorage.getItem('userId');
+      const userId = localStorage.getItem("userId");
 
       if (userId) {
-          const userData = await getUserById(userId);
-          setUser(userData);
+
+        const userData = await getUserById(userId);        
+        setUser(userData);
       }
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error("Error fetching user data:", error);
     }
   };
 
-  const handleChangePicture = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangePicture = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file && user) {
       try {
-        const imageUrl = await uploadFile(file)
-        const updatedUser = await updateUser(user._id, user.name, imageFullPath(imageUrl));
+        const imageUrl = await uploadFile(file);
+        const updatedUser = await updateUser(
+          user._id,
+          user.name,
+          imageFullPath(imageUrl)
+        );
         setUser(updatedUser);
       } catch (error) {
-        console.error('Error updating profile picture:', error);
+        console.error("Error updating profile picture:", error);
       }
     }
   };
@@ -47,18 +52,22 @@ const Profile: React.FC = () => {
   const handleChangeUsername = async () => {
     if (user && newUsername) {
       try {
-        const updatedUser = await updateUser(user._id, newUsername, user.imageUrl );
+        const updatedUser = await updateUser(
+          user._id,
+          newUsername,
+          user.imageUrl
+        );
         setUser(updatedUser);
         setIsEditing(false);
-        setNewUsername('');
+        setNewUsername("");
       } catch (error) {
-        console.error('Error updating username:', error);
+        console.error("Error updating username:", error);
       }
     }
   };
 
- if (!user) {
-    return <div>Loading...</div>;
+  if (!user) {
+    return <div style={{textAlign: "center"}}>Loading...</div>;
   }
 
   return (
@@ -67,7 +76,10 @@ const Profile: React.FC = () => {
       <div className="profile-content">
         <h1>Hello, {user.name}!</h1>
         <div className="profile-picture">
-          <img src={user.imageUrl || '/src/assets/default-avatar.jpg'} alt={user.name} />
+          <img
+            src={user.imageUrl || "/src/assets/default-avatar.jpg"}
+            alt={user.name}
+          />
         </div>
         <div className="profile-actions">
           <input
@@ -75,7 +87,7 @@ const Profile: React.FC = () => {
             id="profile-picture-input"
             accept="image/*"
             onChange={handleChangePicture}
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
           />
           <label htmlFor="profile-picture-input" className="profile-button">
             Change Picture
@@ -91,12 +103,18 @@ const Profile: React.FC = () => {
               <button onClick={handleChangeUsername} className="profile-button">
                 Save Username
               </button>
-              <button onClick={() => setIsEditing(false)} className="profile-button">
+              <button
+                onClick={() => setIsEditing(false)}
+                className="profile-button"
+              >
                 Cancel
               </button>
             </div>
           ) : (
-            <button onClick={() => setIsEditing(true)} className="profile-button">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="profile-button"
+            >
               Change Username
             </button>
           )}

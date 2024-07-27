@@ -1,9 +1,9 @@
 import { fetchWeatherApi } from 'openmeteo';
 	
 const params = {
-    // long and lat of Tel Aviv
-	"latitude": 32.0809,
-	"longitude": 34.7806,
+    // long and lat of Rishon LeZion
+	"latitude": 31.971,
+    "longitude": 34.7894,
 	"hourly": "temperature_2m",
     "forecast_days": 1
 };

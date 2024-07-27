@@ -66,7 +66,7 @@ const Home: React.FC = () => {
           ownerImageUrl: user.imageUrl,
         };
         createPost(newPost).then((post) => {
-          setPosts([post, ...posts])
+          setPosts([post, ...posts]);
           console.log("Creating post:", newPost);
         });
       })
@@ -86,13 +86,15 @@ const Home: React.FC = () => {
 
     try {
       await updatePost(updatedPost);
-      setPosts(posts?.map((post) => {
-        if (post._id == updatedPost._id) {
-          return updatedPost;
-        } else {
-          return post;
-        }
-      }));
+      setPosts(
+        posts?.map((post) => {
+          if (post._id == updatedPost._id) {
+            return updatedPost;
+          } else {
+            return post;
+          }
+        })
+      );
       console.log("Updating post:", updatedPost);
     } catch (error) {
       console.error("Error updating post:", error);
@@ -102,7 +104,7 @@ const Home: React.FC = () => {
   const deleteSelectedPost = async (postId: string) => {
     try {
       await deletePost(postId);
-      setPosts(posts?.filter((post) => post._id != postId))
+      setPosts(posts?.filter((post) => post._id != postId));
       console.log("Deleting post with id:", postId);
     } catch (error) {
       console.error("Error deleting post:", error);
@@ -128,15 +130,22 @@ const Home: React.FC = () => {
           post={selectedPost!}
         />
       )}
-      <button onClick={handleCreatePost}>Create Post</button>
       <div className="posts-container">
-        <button
-          className="toogle-btn"
-          onClick={() => setShowAllPosts(!showAllPosts)}
-        >
-          {showAllPosts ? "Show my posts" : "Show all posts"}
-          {showAllPosts && <i className="fa fa-filter" aria-hidden="true"></i>}
-        </button>
+        <div className="actions">
+          <button
+            className="toogle-btn"
+            title={showAllPosts ? "Filter" : "Remove filter"}
+            onClick={() => setShowAllPosts(!showAllPosts)}
+          >
+            {showAllPosts ? "Show my posts" : "Show all posts"}
+            {showAllPosts && (
+              <i className="fa fa-filter" aria-hidden="true"></i>
+            )}
+          </button>
+          <button className="create-btn" title="create post" onClick={handleCreatePost}>
+            <i className="fa fa-plus"></i>
+          </button>
+        </div>
         {posts?.length &&
           postsToShow.map((post: Post) => (
             <div
