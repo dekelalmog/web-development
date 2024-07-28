@@ -4,6 +4,7 @@ import { Comment, Post, User } from "../../services/interfaces";
 import { addComment, getPostById } from "../../services/posts-service";
 import { getUserById } from "../../services/user-service";
 import Toolbar from "../Toolbar/Toolbar";
+import { imageSrc } from "../../services/utils";
 import "./PostPage.css";
 
 const PostPage: React.FC = () => {
@@ -73,7 +74,7 @@ const PostPage: React.FC = () => {
         <div className="comment-container" key={index}>
           <div className="header">
             <span className="name">{user?.name}</span>
-            <img className="img" src={user?.imageUrl} alt="User" />
+            <img className="img" src={imageSrc(user?.imageUrl)} alt="User" />
           </div>
           <p className="content">{comment.text}</p>
         </div>
@@ -109,6 +110,10 @@ const PostPage: React.FC = () => {
       <Toolbar />
       {!loading && post ? (
         <div className="post-container">
+          <div className="header">
+            <span className="name">{post.ownerName}</span>
+            <img className="img" src={imageSrc(post.ownerImageUrl)} alt="User" />
+          </div>
           <p className="content">{post.description}</p>
           {post.imageUrl && <img className="post-img" src={post.imageUrl} alt="Post" />}
           <h2>Comments</h2>

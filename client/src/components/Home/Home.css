@@ -4,6 +4,25 @@
   align-items: center;
   margin-top: 30px;
 
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+
+    .name {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    .img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-left: auto;
+    }
+  }
+
   .actions {
     display: flex;
     justify-content: space-between;

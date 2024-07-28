@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import CreatePost from "../CreatePost/CreatePost";
 import UpdatePost from "../UpdatePost/UpdatePost";
 import { getUserById } from "../../services/user-service";
+import { imageSrc } from "../../services/utils";
 
 const Home: React.FC = () => {
   const userId = localStorage.getItem("userId");
@@ -26,7 +27,7 @@ const Home: React.FC = () => {
       try {
         const data = await getAllPosts();
         console.log(data);
-        setPosts(data);
+        setPosts(data.reverse());
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
@@ -153,11 +154,14 @@ const Home: React.FC = () => {
               className="post-card"
               onClick={() => handlePostClick(post)}
             >
-              <h6>{post.ownerName}</h6>
+              <div className="header">
+                <span className="name">{post.ownerName}</span>
+                <img className="img" src={imageSrc(post.ownerImageUrl)} alt="User" />
+              </div>
               <p>{post.description}</p>
               {post.imageUrl && <img src={post.imageUrl} alt="Post" />}
               <div>
-                <Link to={`post/${post._id}`} target="_blank">
+                <Link to={`post/${post._id}`}>
                   comments ({post.comments.length})
                 </Link>
               </div>

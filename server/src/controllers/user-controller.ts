@@ -4,6 +4,7 @@ import { OAuth2Client } from "google-auth-library";
 import { Document } from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import PostModel from "../models/post";
 
 const client = new OAuth2Client();
 
@@ -259,6 +260,8 @@ const extractToken = (req: Request): string => {
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const user = await UserModel.findByIdAndUpdate(req.body._id, {imageUrl: req.body.imageUrl, name: req.body.name}, {new: true})
+
+    await PostModel.updateMany({ ownerId: user._id}, {ownerName: user.name, ownerImageUrl: user.imageUrl})
     res.status(200).json(user);
   } catch (err) {
     res.status(500).send("Internal Error");

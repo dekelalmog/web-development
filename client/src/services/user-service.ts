@@ -48,7 +48,7 @@ export const logout = async () => {
 
   try {
     const client = axios.create();
-    await client.post(`${SERVER_URL}/users/logout`, {
+    await client.post(`${SERVER_URL}/users/logout`, {}, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
       },

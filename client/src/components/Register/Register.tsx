@@ -3,7 +3,6 @@ import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { googleSignin, register } from "../../services/user-service";
 import { uploadFile } from "../../services/file-service";
-import { imageFullPath } from "../../services/utils";
 import "./Register.css";
 
 const Register: FC = () => {
@@ -32,8 +31,7 @@ const Register: FC = () => {
 
     let imageRoute = "";
       if (imageFile) {
-        const imageUrl = await uploadFile(imageFile);
-        imageRoute = imageFullPath(imageUrl);
+        imageRoute = await uploadFile(imageFile);
       }
 
       await register(email, password, name, imageRoute);
