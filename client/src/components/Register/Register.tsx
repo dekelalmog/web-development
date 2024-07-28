@@ -32,8 +32,7 @@ const Register: FC = () => {
 
     let imageRoute = "";
       if (imageFile) {
-        const imageUrl = await uploadFile(imageFile);
-        imageRoute = imageFullPath(imageUrl);
+        imageRoute = await uploadFile(imageFile);
       }
 
       await register(email, password, name, imageRoute);
