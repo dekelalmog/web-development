@@ -88,7 +88,7 @@ const PostPage: React.FC = () => {
     if (!post || !comment) return;
 
     const newComment: Comment = {
-      owner: post.ownerId,
+      owner: localStorage.getItem('userId')!,
       text: comment,
     };
 
