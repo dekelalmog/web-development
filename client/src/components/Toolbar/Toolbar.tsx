@@ -1,9 +1,9 @@
-// src/components/Toolbar.tsx
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../../services/user-service";
-import "./Toolbar.css";
+import { getUserById, logout } from "../../services/user-service";
 import { getWeather } from "../../services/weather-service";
+import "./Toolbar.css";
+import { refreshToken } from "../../services/api-service";
 
 const Toolbar: React.FC = () => {
   const navigate = useNavigate();
@@ -17,10 +17,26 @@ const Toolbar: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-      navigate("/login");
-    }
+    async () => {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        navigate("/login");
+        return;
+      }
+
+      try {
+        await getUserById(userId);
+      } catch (error) {
+        try {
+          await refreshToken();
+        } catch (error) {
+          localStorage.removeItem("userId");
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          navigate("/login");
+        }
+      }
+    };
   }, [navigate]);
 
   const handleLogout = async () => {

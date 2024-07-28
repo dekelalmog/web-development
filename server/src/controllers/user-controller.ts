@@ -49,7 +49,7 @@ export const register = async (req: Request, res: Response) => {
 
     newUser.tokens.push(tokens.accessToken);
 
-    return res.status(201).send(newUser);
+    return res.status(201).send({tokens, _id: newUser._id});
 
 
   } catch (error) {

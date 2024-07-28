@@ -1,11 +1,10 @@
-// src/pages/Profile.tsx
 import React, { useState, useEffect } from "react";
 import { getUserById, updateUser } from "../../services/user-service";
 import { uploadFile } from "../../services/file-service";
 import { User } from "../../services/interfaces";
 import Toolbar from "../Toolbar/Toolbar";
-import "./Profile.css";
 import { imageFullPath } from "../../services/utils";
+import "./Profile.css";
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -66,14 +65,10 @@ const Profile: React.FC = () => {
     }
   };
 
-  if (!user) {
-    return <div style={{textAlign: "center"}}>Loading...</div>;
-  }
-
   return (
     <div className="profile-page">
       <Toolbar />
-      <div className="profile-content">
+      {user && <div className="profile-content">
         <h1>Hello, {user.name}!</h1>
         <div className="profile-picture">
           <img
@@ -119,7 +114,7 @@ const Profile: React.FC = () => {
             </button>
           )}
         </div>
-      </div>
+      </div>}
     </div>
   );
 };
