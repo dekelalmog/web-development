@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "tsc && node ./dist/server.js",
-    "dev": "set NODE_ENV=dev && nodemon src/server.ts",
+    "dev": "set NODE_ENV=dev&& nodemon src/server.ts",
+    "prod": "export NODE_ENV=prod&& tsc -p tsconfig.json && node ./dist/server.js",
+    "prod-pm2": "export NODE_ENV=prod&& tsc -p tsconfig.json && pm2 restart ./dist/server.js",
     "lint": "eslint . --ext .ts",
     "test": "set NODE_ENV=test&& tsc && jest --no-cache --detectOpenHandles --forceExit"
   },

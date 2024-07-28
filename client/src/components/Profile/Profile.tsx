@@ -40,7 +40,7 @@ const Profile: React.FC = () => {
         const updatedUser = await updateUser(
           user._id,
           user.name,
-          imageFullPath(imageUrl)
+          imageUrl
         );
         setUser(updatedUser);
       } catch (error) {
@@ -77,7 +77,7 @@ const Profile: React.FC = () => {
         <h1>Hello, {user.name}!</h1>
         <div className="profile-picture">
           <img
-            src={user.imageUrl || "/src/assets/default-avatar.jpg"}
+            src={user.imageUrl ? imageFullPath(user.imageUrl) : "/src/assets/default-avatar.jpg"}
             alt={user.name}
           />
         </div>

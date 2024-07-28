@@ -8,14 +8,13 @@ import weatherRouter from './routes/weather-router'
 import fileRouter from './routes/file-router'
 import postsRouter from './routes/posts-router';
 import userRouter from './routes/user-router';
+import path from 'path';
 
 if (process.env.NODE_ENV === "test") {
     env.config({ path: ".env.test" });
 } else if (process.env.NODE_ENV === "prod") {
     env.config({ path: ".env.prod" });
 } else if (process.env.NODE_ENV === "dev") {
-    env.config({ path: ".env.dev" });
-} else {
     env.config();
 }
 
@@ -29,7 +28,17 @@ const initApp = (): Promise<Express> => {
             app.use(bodyParser.json());
 
             app.use(cors())
-            
+            app.use(express.static(path.join(__dirname, '..', '..', 'client', 'dist')));
+            app.use((req, res, next) => {
+                if (/(.ico|.js|.css|.jpg|.png|.map)$/i.test(req.path)) {
+                    next();
+                } else {
+                    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+                    res.header('Expires', '-1');
+                    res.header('Pragma', 'no-cache');
+                    res.sendFile(path.join(__dirname, '..', '..', 'client', 'dist'));
+                }
+            });
             app.use('/posts', postsRouter);
             app.use('/users', userRouter);
             app.use('/weather', weatherRouter)
