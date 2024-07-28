@@ -12,7 +12,7 @@ import path from 'path';
 
 if (process.env.NODE_ENV === "test") {
     env.config({ path: ".env.test" });
-} else if (process.env.NODE_ENV === "prod") {
+} else if (process.env.NODE_ENV === "production") {
     env.config({ path: ".env.prod" });
 } else if (process.env.NODE_ENV === "dev") {
     env.config();

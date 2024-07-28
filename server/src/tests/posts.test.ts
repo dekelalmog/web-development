@@ -54,7 +54,7 @@ beforeAll(async () => {
   await UserModel.deleteMany();
   const response = await request(app).post("/users/register").send(testUser)
   testPost.ownerId = response.body._id
-  accessToken = response.body.tokens[1]
+  accessToken = response.body.tokens.accessToken
 })
 
 afterAll(async () => {

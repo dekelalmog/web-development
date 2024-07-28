@@ -26,7 +26,7 @@ init().then((app) => {
         res.sendFile(path.join(__dirname, '..', '..', 'client', 'dist', 'index.html'));
     });
     
-    if (process.env.NODE_ENV !== 'prod') {
+    if (process.env.NODE_ENV !== 'production') {
       console.log("development mode");
       http.createServer(app).listen(process.env.PORT)
       console.log(

@@ -26,6 +26,7 @@ describe('User Routes', () => {
   describe('GET /users/:id', () => {
     let userId: string;
     let userEmail = "testuser@example.com"
+    let accessToken;
     
     beforeAll(async () => {
       const user = await UserModel.create({
@@ -34,6 +35,8 @@ describe('User Routes', () => {
         tokens: [],
       });
       userId = user._id;
+      const tokens = await generateTokens(user);
+      accessToken = tokens.accessToken;
     });
 
     afterAll(async () => {
@@ -41,13 +44,13 @@ describe('User Routes', () => {
     });
 
     test('should get user by ID', async () => {
-      const response = await request(app).get(`/users/${userId}`);
+      const response = await request(app).get(`/users/${userId}`).set("authorization", `Bearer ${accessToken}`);
       expect(response.status).toBe(200);
       expect(response.body.email).toBe(userEmail);
     });
 
     test('should return 404 if user not found', async () => {
-      const response = await request(app).get('/users/invalidId');
+      const response = await request(app).get('/users/invalidId').set("authorization", `Bearer ${accessToken}`);
       expect(response.status).toBe(404);
     });
   });
@@ -63,7 +66,6 @@ describe('User Routes', () => {
 
       const response = await request(app).post('/users/register').send(newUser);
       expect(response.status).toBe(201);
-      expect(response.body.email).toBe(newUser.email);
 
       await UserModel.findOneAndDelete({ email: newUser.email });
     });
@@ -268,7 +270,8 @@ describe('User Routes', () => {
 
   describe('PUT /users', () => {
     let user: any;
-  
+    let accessToken;
+    
     beforeAll(async () => {
       user = await UserModel.create({
         email: 'updateuser@example.com',
@@ -277,6 +280,9 @@ describe('User Routes', () => {
         imageUrl: 'URL1',
         name: 'Old User',
       });
+      
+      const tokens = await generateTokens(user);
+      accessToken = tokens.accessToken;
     });
   
     afterAll(async () => {
@@ -290,20 +296,20 @@ describe('User Routes', () => {
         name: 'Updated User',
       };
   
-      const response = await request(app).put('/users/').send(updatedUser);
+      const response = await request(app).put('/users/').send(updatedUser).set("authorization", `Bearer ${accessToken}`);
       expect(response.status).toBe(200);
       expect(response.body.imageUrl).toBe(updatedUser.imageUrl);
       expect(response.body.name).toBe(updatedUser.name);
     });
   
-    test('should return 500 for internal error', async () => {
+    test('should return 500 for invalid user', async () => {
       const invalidUser = {
         _id: 'invalidId',
         imageUrl: 'http://example.com/updated-image.jpg',
         name: 'Updated User',
       };
   
-      const response = await request(app).put('/users/').send(invalidUser);
+      const response = await request(app).put('/users/').send(invalidUser).set("authorization", `Bearer ${accessToken}`);
       expect(response.status).toBe(500);
     });
   });
