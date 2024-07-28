@@ -3,7 +3,7 @@ import { getUserById, updateUser } from "../../services/user-service";
 import { uploadFile } from "../../services/file-service";
 import { User } from "../../services/interfaces";
 import Toolbar from "../Toolbar/Toolbar";
-import { imageFullPath } from "../../services/utils";
+import { imageSrc } from "../../services/utils";
 import "./Profile.css";
 
 const Profile: React.FC = () => {
@@ -72,7 +72,7 @@ const Profile: React.FC = () => {
         <h1>Hello, {user.name}!</h1>
         <div className="profile-picture">
           <img
-            src={user.imageUrl ? imageFullPath(user.imageUrl) : "/src/assets/default-avatar.jpg"}
+            src={imageSrc(user.imageUrl)}
             alt={user.name}
           />
         </div>
