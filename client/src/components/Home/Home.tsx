@@ -153,11 +153,14 @@ const Home: React.FC = () => {
               className="post-card"
               onClick={() => handlePostClick(post)}
             >
-              <h6>{post.ownerName}</h6>
+              <div className="header">
+                <span className="name">{post.ownerName}</span>
+                <img className="img" src={post.ownerImageUrl} alt="User" />
+              </div>
               <p>{post.description}</p>
               {post.imageUrl && <img src={post.imageUrl} alt="Post" />}
               <div>
-                <Link to={`post/${post._id}`} target="_blank">
+                <Link to={`post/${post._id}`}>
                   comments ({post.comments.length})
                 </Link>
               </div>

@@ -109,6 +109,10 @@ const PostPage: React.FC = () => {
       <Toolbar />
       {!loading && post ? (
         <div className="post-container">
+          <div className="header">
+            <span className="name">{post.ownerName}</span>
+            <img className="img" src={post.ownerImageUrl} alt="User" />
+          </div>
           <p className="content">{post.description}</p>
           {post.imageUrl && <img className="post-img" src={post.imageUrl} alt="Post" />}
           <h2>Comments</h2>

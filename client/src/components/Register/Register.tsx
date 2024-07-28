@@ -30,7 +30,7 @@ const Register: FC = () => {
       return;
     }
 
-    let imageRoute = "";
+    let imageRoute = "/images/default-avatar.jpg";
       if (imageFile) {
         const imageUrl = await uploadFile(imageFile);
         imageRoute = imageFullPath(imageUrl);

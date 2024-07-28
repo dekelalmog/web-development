@@ -98,7 +98,7 @@ const UpdatePost: React.FC<Props> = (props: Props) => {
         </form>
         <div className="actions">
           <button className="delete-btn" title="Delete" onClick={handleDelete}>Delete</button>
-          <button type="submit" onClick={() => handleSubmit} title="Update">Update</button>
+          <button type="submit" onClick={() => handleSubmit()} title="Update">Update</button>
         </div>
       </div>
     </Modal>
