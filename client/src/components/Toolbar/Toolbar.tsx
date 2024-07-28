@@ -17,7 +17,7 @@ const Toolbar: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    async () => {
+    (async () => {
       const userId = localStorage.getItem("userId");
       if (!userId) {
         navigate("/login");
@@ -36,7 +36,7 @@ const Toolbar: React.FC = () => {
           navigate("/login");
         }
       }
-    };
+    })();
   }, [navigate]);
 
   const handleLogout = async () => {
