@@ -14,8 +14,6 @@ if (process.env.NODE_ENV === "test") {
 } else if (process.env.NODE_ENV === "prod") {
     env.config({ path: ".env.prod" });
 } else if (process.env.NODE_ENV === "dev") {
-    env.config({ path: ".env.dev" });
-} else {
     env.config();
 }
 
