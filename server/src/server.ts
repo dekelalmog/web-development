@@ -4,6 +4,7 @@ import swaggerJsDoc from "swagger-jsdoc"
 import https from 'https';
 import http from 'http';
 import fs from 'fs'
+import path from "path";
 
 init().then((app) => {
   const options = {
@@ -20,6 +21,10 @@ init().then((app) => {
     };
     const specs = swaggerJsDoc(options);
     app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
+
+    app.get('*', (req,res) =>{
+        res.sendFile(path.join(__dirname, '..', '..', 'client', 'dist', 'index.html'));
+    });
     
     if (process.env.NODE_ENV !== 'prod') {
       console.log("development mode");
