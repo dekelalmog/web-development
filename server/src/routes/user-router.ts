@@ -1,5 +1,5 @@
 import express from 'express';
-import { login, register, getById, logout, refreshToken, googleLogin, updateUser } from '../controllers/user-controller';
+import { login, register, getById, logout, refreshToken, googleLogin, updateUser, authMiddleware } from '../controllers/user-controller';
 
 const router = express.Router();
 
@@ -81,7 +81,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.get('/:id', getById);
+router.get('/:id',authMiddleware, getById);
 
 /**
  * @swagger
@@ -318,5 +318,5 @@ router.post('/google-login', googleLogin);
  *       500:
  *         description: Internal Server Error
  */
-router.put('/', updateUser)
+router.put('/',authMiddleware, updateUser)
 export default router;

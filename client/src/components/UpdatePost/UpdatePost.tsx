@@ -27,8 +27,7 @@ const UpdatePost: React.FC<Props> = (props: Props) => {
     closeModal();
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (!description) {
       return;
     }
@@ -75,7 +74,7 @@ const UpdatePost: React.FC<Props> = (props: Props) => {
       <div className="create-post update-post">
       <button className="close-btn" onClick={closeModal} title="close">X</button>
         <h2>Update post</h2>
-        <form onSubmit={handleSubmit}>
+        <form>
           <input
             type="text"
             placeholder="Write Description"
@@ -99,7 +98,7 @@ const UpdatePost: React.FC<Props> = (props: Props) => {
         </form>
         <div className="actions">
           <button className="delete-btn" title="Delete" onClick={handleDelete}>Delete</button>
-          <button type="submit" title="Update">Update</button>
+          <button type="submit" onClick={() => handleSubmit} title="Update">Update</button>
         </div>
       </div>
     </Modal>

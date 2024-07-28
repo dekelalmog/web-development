@@ -19,7 +19,8 @@ export const register = async (
       name,
     });
 
-    localStorage.setItem("accessToken", response.data.tokens[0]);
+    localStorage.setItem("accessToken", response.data.tokens.accessToken);
+    localStorage.setItem("refreshToken", response.data.tokens.refreshToken);
     localStorage.setItem("userId", response.data._id);
 
     return response.data;
@@ -46,10 +47,8 @@ export const logout = async () => {
     import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
   try {
-    const client = axios.create({
-      baseURL: SERVER_URL,
-    });
-    await client.post("users/logout", {
+    const client = axios.create();
+    await client.post(`${SERVER_URL}/users/logout`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
       },
