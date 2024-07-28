@@ -31,7 +31,7 @@ init().then((app) => {
       console.log("production mode");
       const certOptions = {
         key: fs.readFileSync('/home/st111/certs/client-key.pem'),
-        cert: fs.readdirSync('/home/st111/certs/client-cert.pem')
+        cert: fs.readFileSync('/home/st111/certs/client-cert.pem')
       };
 
       https.createServer(certOptions, app).listen(process.env.PORT);
